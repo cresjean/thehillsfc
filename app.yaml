@@ -1,0 +1,79 @@
+application: thehillsfc
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+
+- url: /assets/images
+  static_dir: client/dist/assets/images
+
+- url: /favicon.ico
+  static_files: client/dist/favicon.ico
+  upload: client/dist/favicon.ico
+
+- url: /styles
+  static_dir: client/dist/styles
+
+- url: /styles
+  static_dir: client/dist/styles
+
+- url: /images
+  static_dir: client/dist/images
+
+- url: /scripts
+  static_dir: client/dist/scripts
+
+- url: /fonts
+  static_dir: client/dist/fonts
+
+- url: /views
+  static_dir: client/dist/views
+
+- url: /app/bower_components/*
+  static_dir: client/bower_components
+
+- url: /app(/?)
+  script: main.application
+
+- url: /app/*
+  static_dir: client/app
+
+- url: /
+  static_files: client/dist/index.html
+  upload: client/dist/index.html
+
+- url: /.*
+  script: main.app
+
+- url: /(.*\.eot)
+  mime_type: application/vnd.ms-fontobject
+  static_files: static/\1
+  upload: static/(.*\.eot)
+  login: required
+
+- url: /(.*\.ttf)
+  mime_type: font/ttf
+  static_files: static/\1
+  upload: static/(.*\.ttf)
+  login: required
+
+skip_files:
+- ^(.*/node_modules/.*)
+- ^(.*/.idea/.*)
+- ^(.*/bower_components/.*)
+- ^(.*/.tmp/.*)
+- ^(.*/app/.*)
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*\.py[co]$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
+
+
+libraries:
+- name: jinja2
+  version: "2.6"
+- name: markupsafe
+  version: "0.15"
