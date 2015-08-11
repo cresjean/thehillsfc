@@ -1,4 +1,8 @@
 from flask import Flask
+from match import Match
+from flask import json
+import logging
+from flask.views import MethodView
 app = Flask(__name__)
 app.config['DEBUG'] = True
 
@@ -6,10 +10,22 @@ app.config['DEBUG'] = True
 # the App Engine WSGI application server.
 
 
-@app.route('/')
-def hello():
+
+@app.route('/app')
+def dev():
     """Return a friendly HTTP greeting."""
     return 'Hello World!'
+
+
+
+class MatchAPI(MethodView):
+
+    def get(self, match_id):
+        if match_id is None:
+            logging.debug("Match ID is none, listing matches")
+        else:
+            logging.debug("Match ID {}".format(match_id))
+
 
 
 @app.errorhandler(404)
