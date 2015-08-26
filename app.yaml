@@ -31,9 +31,11 @@ handlers:
 - url: /views
   static_dir: client/dist/views
 
-- url: /app/bower_components/*
+- url: /bower_components/*
   static_dir: client/bower_components
 
+- url: /app/bower_components/*
+  static_dir: client/bower_components
 
 - url: /app/*
   static_dir: client/src

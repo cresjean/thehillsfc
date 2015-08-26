@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('client')
-  .controller('NavbarCtrl', function ($scope) {
+angular.module('hillfc')
+  .controller('NavbarCtrl', function ($scope,$log) {
     $scope.date = new Date();
   });

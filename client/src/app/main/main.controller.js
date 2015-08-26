@@ -1,7 +1,8 @@
 'use strict';
 
-angular.module('client')
+angular.module('hillfc')
   .controller('MainCtrl', function ($scope) {
+      $log.debug('Main Ctrl');
     $scope.awesomeThings = [
       {
         'title': 'AngularJS',
