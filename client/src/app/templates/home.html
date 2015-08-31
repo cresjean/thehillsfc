@@ -24,8 +24,8 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr class="animate" dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 ">
-                            <td>{{match.startTime | amCalendar}}</td>
+                        <tr dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 " >
+                            <td><a ui-sref="match({matchId:match.id})"> {{match.startTime | amCalendar}}</a></td>
                             <td>{{match.checkinLatest | amCalendar }}</td>
                             <td>{{match.location}}</td>
                         </tr>
@@ -70,7 +70,8 @@
                                     <datetimepicker data-ng-model="match.startTime"
                                                     data-on-set-time="onTimeSet(newDate, oldDate)"
                                                     data-min-date="today"
-                                                    data-datetimepicker-config="{minDate:'today', dropdownSelector: '#starttime',minuteStep: 30 }"/>
+                                                    data-before-render="beforeRender($dates)"
+                                                    data-datetimepicker-config="{ dropdownSelector: '#starttime',minuteStep: 30 }"/>
                                 </ul>
                             </div>
                             <div class="col-md-6">

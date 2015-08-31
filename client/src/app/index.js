@@ -19,6 +19,16 @@ app.config(function($stateProvider, $urlRouterProvider){
                 templateUrl: 'app/templates/home.html',
                 controller: 'HomeCtrl'
             })
+            .state('match', {
+                url: '/match/:matchId',
+                templateUrl : 'app/templates/match.html',
+                controller: 'MatchCtrl',
+                resolve: {
+                    match: function (MatchFactory, $stateParams) {
+                        return MatchFactory.getMatch($stateParams.matchId);
+                    }
+                }
+            })
 
 
     })
@@ -31,22 +41,5 @@ app.config(function($stateProvider, $urlRouterProvider){
     amMoment.changeLocale('au');
 })
 
-.directive('input-datetime', function() {
-  return {
-    require: 'ngModel',
-    link: function(scope, element, attrs, ngModelController) {
-      ngModelController.$parsers.push(function(data) {
-        //convert data from view format to model format
-        return data; //converted
-      });
-
-      ngModelController.$formatters.push(function(data) {
-        //convert data from model format to view format
-          var reformat = moment(data).format('yyyy');
-          return reformat; //converted
-      });
-    }
-  }
-});
 ;
 

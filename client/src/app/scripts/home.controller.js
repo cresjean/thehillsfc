@@ -7,6 +7,14 @@ app.controller('HomeCtrl', function ($scope, $log,$filter, MatchFactory) {
     $log.debug('Home Ctrl');
     $scope.match = {};
     $scope.today = new Date();
+    $scope.beforeRender = function($dates){
+            var minDate = new Date();
+            var maxDate = new Date(minDate.getTime() + 60*60*1000*24*30);
+            angular.forEach($dates, function(date) {
+                var localDateValue = date.localDateValue();
+                date.selectable = localDateValue >= minDate && localDateValue <= maxDate;
+            });
+    }
     $scope.onTimeSet = function(newTime, oldTime){
         var endTimeInput = new Date(newTime.getTime());
         endTimeInput.setTime(endTimeInput.getTime() + 2*60*60*1000);
@@ -43,6 +51,9 @@ factory('MatchFactory', function ($http){
             },
             createMatch: function(match){
                 return $http.post('/api/matches', match);
+            },
+            getMatch: function(match_id){
+                return $http.get('/api/matches/'+match_id);
             }
       }
     });

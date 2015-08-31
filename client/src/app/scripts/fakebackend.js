@@ -5,7 +5,14 @@ app.run(function($log,$httpBackend, $http) {
 
     $httpBackend.whenGET('/api/matches').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
-        return [200, qas, {}];
+        return [200, matches, {}];
+
+    });
+
+
+    $httpBackend.whenGET('/api/matches/5066549580791808').respond(function(method, url, data) {
+        $log.debug("Faking %s %s", method, url);
+        return [200, match, {}];
 
     });
 
@@ -16,7 +23,19 @@ app.run(function($log,$httpBackend, $http) {
 	$httpBackend.whenDELETE(/.*/).passThrough();
 });
 
-var qas =
+var match = {
+    "match": {
+        "checkinEarliest": 1440923400,
+        "checkinLatest": 1440926700,
+        "createdTime": 1440568432,
+        "finishTime": 1440934200,
+        "id": "5891733057437696",
+        "location": "Burwood",
+        "startTime": 1440927000
+    }
+};
+
+var matches =
 {
     "matches": [
         {

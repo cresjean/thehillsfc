@@ -4,18 +4,12 @@ from flask_restful import Resource, reqparse, marshal_with, fields
 import logging
 from datetime import datetime
 from time import strptime, mktime
-import calendar
 from datastore.match import Match
+from resource_fields import *
 
-
-class UTCTime(fields.Integer):
-    def format(self, value):
-        logging.debug(value)
-        logging.debug(calendar.timegm(datetime.now().timetuple()))
-        if isinstance(value, datetime):
-            logging.debug(calendar.timegm(value.utctimetuple()))
-            return calendar.timegm(value.utctimetuple())
-        return None
+from ext.util import UTCTime
+from datastore.play import Play
+from resources.play import play_of_match_resource_field
 
 
 def datetime_parser(datetime_str):
@@ -48,28 +42,35 @@ parser.add_argument("checkinEarliest", type=datetime_parser, location='json', re
 parser.add_argument("location", type=str, location='json', required=True,
                     help="Location cannot be blank")
 
-resource_field = {
-    "id": fields.String,
-    "location": fields.String,
-    "startTime": UTCTime,
-    "finishTime": UTCTime,
-    "checkinEarliest": UTCTime,
-    "checkinLatest": UTCTime,
-    "created": UTCTime,
-}
-
-get_resource_fields = {
-    'matches': fields.Nested(resource_field)
-}
 
 
-post_resource_fields = {
-    'match': fields.Nested(resource_field)
-}
+class MatchPlayers(Resource):
 
-class Matches(Resource):
+    @marshal_with(people_resource_field)
+    def get(self, match_id):
+        match = Match.getone(match_id)
+        registered_people = []
+        for ple in match.registerdPeople:
+            registered_people.append(ple.get())
 
-    @marshal_with(get_resource_fields)
+        logging.debug(registered_people)
+        return {"people": registered_people}
+
+
+class MatchResource(Resource):
+
+    @marshal_with(match_resource_fields)
+    def get(self, match_id):
+        match = Match.getone(match_id)
+        plays = Play.getbyMatch(match_id)
+        match.__setattr__('id', match_id)
+
+        return {"match": match}
+
+
+class MatchesResource(Resource):
+
+    @marshal_with(matches_resource_fields)
     def get(self):
         matches = Match.getall()
         matches_json = []
@@ -81,14 +82,14 @@ class Matches(Resource):
                 "finishTime": match.finishTime,
                 "checkinEarliest": match.checkinEarliest,
                 "checkinLatest": match.checkinLatest,
-                "created": match.createdTime
+                "createdTime": match.createdTime
             })
 
 
         return {'matches': matches_json}
 
 
-    @marshal_with(post_resource_fields)
+    @marshal_with(match_resource_fields)
     def post(self):
         logging.debug("creating match")
         args = parser.parse_args()
