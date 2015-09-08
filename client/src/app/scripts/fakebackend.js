@@ -3,14 +3,14 @@
  */
 app.run(function($log,$httpBackend, $http) {
 
-    $httpBackend.whenGET('/api/matches').respond(function(method, url, data) {
+    $httpBackend.whenGET('d/api/matches').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
         return [200, matches, {}];
 
     });
 
 
-    $httpBackend.whenGET('/api/matches/5066549580791808').respond(function(method, url, data) {
+    $httpBackend.whenGET('d/api/matches/5066549580791808').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
         return [200, match, {}];
 

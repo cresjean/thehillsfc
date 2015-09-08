@@ -1,6 +1,7 @@
 __author__ = 'crespowang'
-from flask_restful import Resource, reqparse, marshal_with, fields
+from flask_restful import reqparse, marshal_with, fields
 import logging
+from auth import Resource
 from resource_fields import *
 from datastore.match import Match
 from datastore.play import Play
@@ -10,10 +11,6 @@ parser = reqparse.RequestParser()
 parser.add_argument("peopleId", type=int, location='json', required=True, help="People ID cannot be blank")
 parser.add_argument("matchId", type=int, location='json', required=True, help="Match ID cannot be blank")
 
-
-
-
-
 class PlayMatchResource(Resource):
 
     @marshal_with(plays_of_match_resource_field)
@@ -22,7 +19,7 @@ class PlayMatchResource(Resource):
         for play in plays:
             play.__setattr__('people_detail', play.people.get())
             play.__setattr__('id', play.key.id())
-        logging.debug(plays)
+
         return {"plays": plays}
 
 

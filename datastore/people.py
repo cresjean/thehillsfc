@@ -1,8 +1,13 @@
 __author__ = 'crespowang'
 from google.appengine.ext import ndb
+from hashlib import sha256
+from random import random
+import base64
+
 
 class People(ndb.Model):
     name = ndb.StringProperty()
+    username = ndb.StringProperty()
     position = ndb.StringProperty()
     appearance = ndb.IntegerProperty()
     twitterId = ndb.StringProperty()
@@ -12,14 +17,21 @@ class People(ndb.Model):
     weiboId = ndb.StringProperty()
     wechatId = ndb.StringProperty()
     qqId = ndb.StringProperty()
+    passwordseed = ndb.FloatProperty()
+    password = ndb.StringProperty()
     createdTime = ndb.DateTimeProperty(auto_now_add=True)
 
+    @classmethod
+    def create(cls, name, username):
+        people = People()
+        people.populate(name=name, username=username)
+        return people.put()
 
     @classmethod
-    def create(cls, name, position, wechatId=None):
-        people = People()
-        people.populate(name=name, position=position, wechatId=wechatId)
-        return people.put()
+    def getbyusername(cls, username):
+        q = cls.query(cls.username == username)
+        return q.get()
+
 
     @classmethod
     def getone(cls, id):
@@ -29,5 +41,21 @@ class People(ndb.Model):
     def getall(cls):
         q = cls.query()
         return q.fetch()
+
+    def genpass(self, password):
+
+        seed = random()
+        pwd = base64.b64encode(sha256("{}{}{}".format("paqwe1e!#", seed, password)).digest()).decode()
+        self.passwordseed = seed
+        self.password = pwd
+        self.put()
+
+    def validpassword(self, password):
+        pwd = base64.b64encode(sha256("{}{}{}".format("paqwe1e!#", self.passwordseed, password)).digest()).decode()
+        if pwd == self.password:
+            return True
+        else:
+            return False
+
 
 

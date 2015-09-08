@@ -1,16 +1,16 @@
 {
-  "name": "client",
-  "version": "0.0.0",
+  "name": "thehillsfc",
+  "version": "1.0.0",
   "dependencies": {
     "angular": "~1.4.0",
-    "angular-ui-router": "~0.2.15",
-    "bootstrap": "~",
+    "angular-animate": "~1.4.4",
     "angular-bootstrap": "~0.13.0",
-    "angular-utils-pagination": "~0.8.3",
-    "angular-mocks": "~1.4.4",
     "angular-bootstrap-datetimepicker": "~0.3.13",
+    "angular-mocks": "~1.4.4",
     "angular-moment": "~0.10.2",
-    "angular-animate": "~1.4.4"
+    "angular-ui-router": "~0.2.15",
+    "angular-utils-pagination": "~0.8.3",
+    "bootstrap": "3.3.5"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"

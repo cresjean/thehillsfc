@@ -1,19 +1,40 @@
 __author__ = 'crespowang'
-from flask_restful import Resource, reqparse, marshal_with, fields
+
+
+from flask_restful import reqparse, marshal_with
 import logging
+from login import *
 from resource_fields import *
 from datastore.people import People
-from ext.util import UTCTime
+from exceptions import UserAlreadyExistsError
+from auth import Resource
+from login import User
+
 parser = reqparse.RequestParser()
 
-parser.add_argument("name", type=str, location='json', required=True,
-                    help="Name cannot be blank")
 
+parser.add_argument("name", type=str, location='json')
 parser.add_argument("position", type=str, location='json')
 parser.add_argument("wechatId", type=str, location='json')
+parser.add_argument("username", type=str, location='json')
+parser.add_argument("password", type=str, location='json')
 
 
 
+class PeopleLoginResource(Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        password = args.get('password')
+        username = args.get('username')
+        login_status = False
+        if username and password:
+            people = People.getbyusername(username)
+            login_status = True if people and people.validpassword(password) else False
+            if login_status:
+                login_user(User.get(username), remember=True)
+
+        return {"status": login_status}
 
 
 class PeopleResource(Resource):
@@ -21,10 +42,7 @@ class PeopleResource(Resource):
     @marshal_with(people_resource_field)
     def get(self, people_id):
         people = People.getone(people_id)
-
         people.__setattr__('id', people_id)
-
-        logging.debug(people)
         return {"people": people}
 
 
@@ -45,8 +63,14 @@ class PeoplesResource(Resource):
         logging.debug("creating people")
         args = parser.parse_args()
         people_details = args
-        people = People.create(args.get('name'), args.get('position'), args.get('wechatId'))
+        if People.getbyusername(args.get('username')):
+            logging.warning("Username already taken")
+            raise UserAlreadyExistsError
+        else:
 
-        people_details['id'] = people.id()
+            people = People.create(args.get('name'), args.get('username'))
+            people.get().genpass(args.get('password'))
+            people_details['id'] = people.id()
 
         return {'people': people_details}
+

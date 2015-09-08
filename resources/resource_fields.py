@@ -19,6 +19,12 @@ people_resource_field = {
 }
 
 
+login_resource_field = {
+    "username": fields.String,
+    "password": fields.String
+}
+
+
 # Match Resource
 match_field = {
     "id": fields.String,

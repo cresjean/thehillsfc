@@ -1,15 +1,14 @@
 __author__ = 'crespowang'
 
-from flask_restful import Resource, reqparse, marshal_with, fields
+from flask_restful import reqparse, marshal_with, fields
 import logging
 from datetime import datetime
 from time import strptime, mktime
 from datastore.match import Match
 from resource_fields import *
-
-from ext.util import UTCTime
+from exceptions import MatchNotExistsError
 from datastore.play import Play
-from resources.play import play_of_match_resource_field
+from auth import Resource
 
 
 def datetime_parser(datetime_str):
@@ -46,10 +45,14 @@ parser.add_argument("location", type=str, location='json', required=True,
 
 class MatchPlayers(Resource):
 
+
     @marshal_with(people_resource_field)
     def get(self, match_id):
         match = Match.getone(match_id)
+        if match is None:
+            raise MatchNotExistsError
         registered_people = []
+
         for ple in match.registerdPeople:
             registered_people.append(ple.get())
 
