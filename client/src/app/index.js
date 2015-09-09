@@ -12,10 +12,15 @@ var app = angular.module('hillfc',
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider){
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/login");
         $stateProvider.
-            state('home', {
-                url: '/',
+            state('login', {
+                url: '^/login',
+                templateUrl: 'app/templates/login.html',
+                controller: 'LoginCtrl'
+            })
+            .state('home', {
+                url: '^/home',
                 templateUrl: 'app/templates/home.html',
                 controller: 'HomeCtrl'
             })

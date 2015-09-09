@@ -2,7 +2,6 @@ __author__ = 'crespowang'
 from flask_restful import Resource, abort
 from functools import wraps
 from flask.ext.login import current_user
-import logging
 
 def basic_authentication():
     return current_user.is_authenticated()
