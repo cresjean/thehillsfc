@@ -17,6 +17,7 @@ def authenticate(func):
 
         if acct:
             return func(*args, **kwargs)
+
         abort(401)
     return wrapper
 

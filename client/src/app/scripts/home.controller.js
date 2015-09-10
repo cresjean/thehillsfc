@@ -4,6 +4,7 @@
 'use strict';
 
 app.controller('HomeCtrl', function ($scope, $log,$filter, MatchFactory) {
+
     $log.debug('Home Ctrl');
     $scope.match = {};
     $scope.today = new Date();

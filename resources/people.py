@@ -1,12 +1,12 @@
 __author__ = 'crespowang'
 
 
-from flask_restful import reqparse, marshal_with
+from flask_restful import reqparse, marshal_with, Resource as Flask_Resource
 import logging
 from login import *
 from resource_fields import *
 from datastore.people import People
-from exceptions import UserAlreadyExistsError
+from exceptions import UserAlreadyExistsError, InvalidLoginError
 from auth import Resource
 from login import User
 
@@ -20,8 +20,7 @@ parser.add_argument("username", type=str, location='json')
 parser.add_argument("password", type=str, location='json')
 
 
-
-class PeopleLoginResource(Resource):
+class PeopleLoginResource(Flask_Resource):
 
     def post(self):
         args = parser.parse_args()
@@ -34,6 +33,8 @@ class PeopleLoginResource(Resource):
             if login_status:
                 login_user(User.get(username), remember=True)
 
+        if not login_status:
+            raise InvalidLoginError
         return {"status": login_status}
 
 
@@ -46,7 +47,7 @@ class PeopleResource(Resource):
         return {"people": people}
 
 
-class PeoplesResource(Resource):
+class PeoplesResource(Flask_Resource):
 
     @marshal_with(people_resource_field)
     def get(self):

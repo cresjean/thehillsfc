@@ -19,6 +19,10 @@ custom_errors = {
         'message': "A user with that username already exists.",
         'status': 409,
     },
+    'InvalidLoginError' : {
+        'message': "The login details are not right",
+        'status': 401
+    },
     'MatchNotExistsError': {
         'message': "The match ID does not exist",
         'status': 404,

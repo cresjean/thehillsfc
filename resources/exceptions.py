@@ -6,3 +6,6 @@ class UserAlreadyExistsError(HTTPException):
 
 class MatchNotExistsError(HTTPException):
     pass
+
+class InvalidLoginError(HTTPException):
+    pass
