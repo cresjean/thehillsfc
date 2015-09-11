@@ -1,11 +1,23 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="NavbarCtrl">
-  <a ui-sref="home">The Hills FC</a>
-  <ul>
-    <li class="active"><a ui-sref="home">Match</a></li>
-    <li><a ng-href="#">People</a></li>
-    <li><a ui-sref="logout">Logout</a></li>
-  </ul>
+  <div class="container-fluid">
+     <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar_c" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" ui-sref="home">The Hills FC</a>
+    </div>
 
+    <div class="collapse navbar-collapse" id="navbar_c">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a ui-sref="home">Match</a></li>
+        <li><a href="#">People</a></li>
+        <li><a ui-sref="logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
 </nav>
 
 

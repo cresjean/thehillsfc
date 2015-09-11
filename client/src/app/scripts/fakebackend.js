@@ -9,6 +9,12 @@ app.run(function($log,$httpBackend, $http) {
 
     });
 
+    $httpBackend.whenPOST('/api/people/login').respond(function(method, url, data) {
+        $log.debug("Faking %s %s", method, url);
+        return [200, {username:'su', name:" Nick"}, {}];
+
+    });
+
 
     $httpBackend.whenGET('d/api/matches/5066549580791808').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
