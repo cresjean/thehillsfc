@@ -9,6 +9,7 @@ from datastore.people import People
 from exceptions import UserAlreadyExistsError, InvalidLoginError
 from auth import Resource
 from login import User
+from flask.ext.login import current_user
 
 parser = reqparse.RequestParser()
 
@@ -20,13 +21,27 @@ parser.add_argument("username", type=str, location='json')
 parser.add_argument("password", type=str, location='json')
 
 
+class PeopleLogoutResource(Flask_Resource):
+
+    def get(self):
+        logout_user()
+        return ('', 204)
+
 class PeopleLoginResource(Flask_Resource):
+
+    def get(self):
+        if current_user.is_authenticated():
+            return {"status": True}
+        else:
+            raise InvalidLoginError
+
 
     def post(self):
         args = parser.parse_args()
         password = args.get('password')
         username = args.get('username')
         login_status = False
+        people = None
         if username and password:
             people = People.getbyusername(username)
             login_status = True if people and people.validpassword(password) else False
@@ -35,7 +50,8 @@ class PeopleLoginResource(Flask_Resource):
 
         if not login_status:
             raise InvalidLoginError
-        return {"status": login_status}
+
+        return {"username": username, "name": people.name}
 
 
 class PeopleResource(Resource):
@@ -47,7 +63,7 @@ class PeopleResource(Resource):
         return {"people": people}
 
 
-class PeoplesResource(Flask_Resource):
+class PeoplesResource(Resource):
 
     @marshal_with(people_resource_field)
     def get(self):

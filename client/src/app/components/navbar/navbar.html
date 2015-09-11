@@ -1,13 +1,11 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" ng-controller="NavbarCtrl">
-  <a>The Hills FC</a>
+  <a ui-sref="home">The Hills FC</a>
   <ul>
     <li class="active"><a ui-sref="home">Match</a></li>
     <li><a ng-href="#">People</a></li>
+    <li><a ui-sref="logout">Logout</a></li>
+  </ul>
 
-  </ul>
-  <ul class="nav navbar-nav navbar-right">
-    <li><a ng-href="/logout">Logout</a></li>
-  </ul>
 </nav>
 
 

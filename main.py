@@ -2,7 +2,7 @@ import logging
 from flask import Flask
 from flask import redirect
 from resources.match import MatchesResource, MatchResource, MatchPlayers
-from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource
+from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource
 from resources.play import PlayResource, PlayMatchResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
@@ -38,6 +38,7 @@ api.add_resource(PlayResource, '/api/play')
 api.add_resource(MatchPlayers, '/api/matches/<match_id>/registered-people')
 api.add_resource(PlayMatchResource, '/api/matches/<match_id>/plays')
 api.add_resource(PeopleLoginResource, '/api/people/login')
+api.add_resource(PeopleLogoutResource, '/api/people/logout')
 
 
 @login_required
