@@ -1,7 +1,7 @@
 import logging
 from flask import Flask
 from flask import redirect
-from resources.match import MatchesResource, MatchResource, MatchPlayers
+from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource
 from resources.play import PlayResource, PlayMatchResource
 from flask_restful import Api
@@ -19,7 +19,7 @@ custom_errors = {
         'message': "A user with that username already exists.",
         'status': 409,
     },
-    'InvalidLoginError' : {
+    'InvalidLoginError': {
         'message': "The login details are not right",
         'status': 401
     },
@@ -46,6 +46,21 @@ api.add_resource(PeopleLogoutResource, '/api/people/logout')
 def logout():
     logout_user()
     return redirect('/')
+
+
+@login_required
+@app.route('/checkin/<matchid>/<code>')
+def match_checkin(matchid, code):
+    logging.debug("Checkin match {} code {}".format(matchid, code))
+    checkin_status = MatchHelper.verfy_checkin(matchid, code)
+    if checkin_status:
+        logging.debug("YEEAP")
+        return redirect('/#/checkin/{}'.format(matchid))
+    else:
+        logging.debug("NOPPP")
+    return redirect('/')
+
+
 
 @app.errorhandler(404)
 def page_not_found(e):

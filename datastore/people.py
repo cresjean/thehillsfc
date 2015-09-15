@@ -19,6 +19,7 @@ class People(ndb.Model):
     qqId = ndb.StringProperty()
     passwordseed = ndb.FloatProperty()
     password = ndb.StringProperty()
+    admin = ndb.BooleanProperty(default=False)
     createdTime = ndb.DateTimeProperty(auto_now_add=True)
 
     @classmethod

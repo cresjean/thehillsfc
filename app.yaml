@@ -37,9 +37,6 @@ handlers:
 - url: /app/bower_components/*
   static_dir: client/bower_components
 
-- url: /app/*
-  static_dir: client/src
-
 - url: /
   static_files: client/dist/index.html
   upload: client/dist/index.html

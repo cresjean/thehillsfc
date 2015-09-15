@@ -51,7 +51,7 @@ class PeopleLoginResource(Flask_Resource):
         if not login_status:
             raise InvalidLoginError
 
-        return {"username": username, "name": people.name}
+        return {"username": username, "name": people.name, "admin": people.admin}
 
 
 class PeopleResource(Resource):
@@ -63,7 +63,7 @@ class PeopleResource(Resource):
         return {"people": people}
 
 
-class PeoplesResource(Resource):
+class PeoplesResource(Flask_Resource):
 
     @marshal_with(people_resource_field)
     def get(self):

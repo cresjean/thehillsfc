@@ -34,6 +34,8 @@ match_field = {
     "checkinEarliest": UTCTime,
     "checkinLatest": UTCTime,
     "createdTime": UTCTime,
+    "checkinLink": fields.String,
+    "regLink": fields.String
 }
 
 match_resource_fields = {

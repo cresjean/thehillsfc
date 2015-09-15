@@ -9,7 +9,8 @@ from resource_fields import *
 from exceptions import MatchNotExistsError
 from datastore.play import Play
 from auth import Resource
-
+from appengine_config import host_url
+from flask.ext.login import current_user
 
 def datetime_parser(datetime_str):
     if datetime_str is not None:
@@ -101,6 +102,8 @@ class MatchesResource(Resource):
                              args.get('checkinLatest'), args.get('location'))
 
         match_details['id'] = match.id()
+        match_details['checkinLink'] = "{}/checkin/{}/{}".format(host_url, match.id(), match.get().checkinCode)
+        match_details['regLink'] = "{}/reg/{}/{}".format(host_url, match.id(), match.get().regCode)
         return {'match': match_details}
 
     def put(self):
@@ -108,3 +111,12 @@ class MatchesResource(Resource):
         return {'hello': 'australia'}
 
 
+class MatchHelper():
+    @classmethod
+    def verfy_checkin(cls, match_id, code):
+        match = Match.getone(match_id)
+        if code == match.checkinCode:
+            logging.debug("Checkin user {}".format(current_user.key_id))
+            # match.register(current_user)
+            return True
+        return False

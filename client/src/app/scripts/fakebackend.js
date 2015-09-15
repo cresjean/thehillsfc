@@ -3,15 +3,15 @@
  */
 app.run(function($log,$httpBackend, $http) {
 
-    $httpBackend.whenGET('d/api/matches').respond(function(method, url, data) {
+    $httpBackend.whenGET('k/api/matches').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
         return [200, matches, {}];
 
     });
 
-    $httpBackend.whenPOST('/api/people/login').respond(function(method, url, data) {
+    $httpBackend.whenPOST('k/api/people/login').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
-        return [200, {username:'su', name:" Nick"}, {}];
+        return [200, {username:'su', name:" Nick", admin: true}, {}];
 
     });
 
@@ -45,51 +45,43 @@ var matches =
 {
     "matches": [
         {
-            "checkinEarliest": 1439350200,
-            "checkinLatest": 1439353500,
-            "created": 1440566592,
-            "finishTime": 1439361000,
+            "checkinEarliest": 1442534400,
+            "checkinLatest": 1442535900,
+            "createdTime": 1442279584,
+            "finishTime": 1442543400,
+            "id": "4785074604081152",
+            "location": "Cherrybrook",
+            "startTime": 1442536200
+        },
+        {
+            "checkinEarliest": 1442723400,
+            "checkinLatest": 1442726700,
+            "createdTime": 1442278591,
+            "finishTime": 1442734200,
             "id": "5066549580791808",
             "location": "Kellyville Plaza",
-            "startTime": 1440566611
+            "startTime": 1442727000
         },
         {
-            "checkinEarliest": 1439350200,
-            "checkinLatest": 1439353500,
-            "created": 1440561042,
-            "finishTime": 1439361000,
-            "id": "5275456790069248",
-            "location": "Kellyville Plaza",
-            "startTime": 1439353800
+            "checkinEarliest": 1442721600,
+            "checkinLatest": 1442723100,
+            "createdTime": 1442279664,
+            "finishTime": 1442730600,
+            "id": "5910974510923776",
+            "location": "Standhope Garden",
+            "startTime": 1442723400
         },
         {
-            "checkinEarliest": 1439350200,
-            "checkinLatest": 1439353500,
-            "created": 1440560229,
-            "finishTime": 1439361000,
-            "id": "5629499534213120",
-            "location": "Kellyville Plaza",
-            "startTime": 1439353800
-        },
-        {
-            "checkinEarliest": 1439350200,
-            "checkinLatest": 1439353500,
-            "created": 1440560898,
-            "finishTime": 1439361000,
-            "id": "5838406743490560",
-            "location": "Kellyville Plaza",
-            "startTime": 1439353800
-        },
-        {
-            "checkinEarliest": 1439350200,
-            "checkinLatest": 1439353500,
-            "created": 1440561137,
-            "finishTime": 1439361000,
-            "id": "6401356696911872",
-            "location": "Kellyville Plaza",
-            "startTime": 1439353800
+            "checkinEarliest": 1443056400,
+            "checkinLatest": 1443057900,
+            "createdTime": 1442279329,
+            "finishTime": 1443065400,
+            "id": "6192449487634432",
+            "location": "Rouse Hill Sports Centre",
+            "startTime": 1443058200
         }
     ]
 }
+
 
 ;
