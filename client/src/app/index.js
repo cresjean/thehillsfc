@@ -9,7 +9,8 @@ var app = angular.module('hillfc',
         'ngStorage',
         'angularUtils.directives.dirPagination',
         'ui.bootstrap.datetimepicker',
-        'angularMoment'
+        'angularMoment',
+        'monospaced.qrcode'
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider){

@@ -37,6 +37,10 @@ class Match(ndb.Model):
         self.registerdPeople.append(ndb.Key('People', long(peopleId)))
         self.put()
 
+    def checkin(self, peopleId):
+        self.participatedPeople.append(ndb.Key('People', long(peopleId)))
+        self.put()
+
     @classmethod
     def code_generator(cls, size=6, chars=string.ascii_uppercase + string.digits):
         return ''.join(random.choice(chars) for _ in range(size))

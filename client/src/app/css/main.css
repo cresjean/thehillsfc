@@ -37,3 +37,19 @@ footer {
 	width: 150px;
 	height: 30px;
 }
+
+.match-label {
+	ppadding-top: 0;
+    margin-bottom: 0;
+    text-align: right;
+}
+.highlight {
+
+	padding: 9px 14px;
+	margin-bottom: 14px;
+	margin-right: 5px;
+	background-color: #f7f7f9;
+	border: 1px solid #e1e1e8;
+	border-radius: 4px;
+
+}

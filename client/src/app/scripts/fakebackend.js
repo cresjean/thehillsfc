@@ -9,14 +9,14 @@ app.run(function($log,$httpBackend, $http) {
 
     });
 
-    $httpBackend.whenPOST('k/api/people/login').respond(function(method, url, data) {
+    $httpBackend.whenPOST('/api/people/login').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
         return [200, {username:'su', name:" Nick", admin: true}, {}];
 
     });
 
 
-    $httpBackend.whenGET('d/api/matches/5066549580791808').respond(function(method, url, data) {
+    $httpBackend.whenGET('/api/matches/5197666342404096').respond(function(method, url, data) {
         $log.debug("Faking %s %s", method, url);
         return [200, match, {}];
 
@@ -31,15 +31,18 @@ app.run(function($log,$httpBackend, $http) {
 
 var match = {
     "match": {
-        "checkinEarliest": 1440923400,
-        "checkinLatest": 1440926700,
-        "createdTime": 1440568432,
-        "finishTime": 1440934200,
-        "id": "5891733057437696",
-        "location": "Burwood",
-        "startTime": 1440927000
+        "checkinEarliest": 1442710800,
+        "checkinLatest": 1442712300,
+        "checkinLink": "http://127.0.0.1:8090/checkin/5197666342404096/SYN9KV",
+        "createdTime": 1442381996,
+        "finishTime": 1442719800,
+        "id": "5197666342404096",
+        "location": "MacGrade Park",
+        "regLink": "http://127.0.0.1:8090/reg/5197666342404096/EQDDKV",
+        "startTime": 1442712600
     }
-};
+}
+;
 
 var matches =
 {

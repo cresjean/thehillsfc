@@ -5,7 +5,7 @@
 
 app.controller('MatchCtrl', function ($scope, $log, MatchFactory, match) {
     $log.debug("Match Ctrl");
-    $scope.match = match;
+    $scope.match = match.data.match;
 
 })
 ;

@@ -35,10 +35,7 @@ app.controller('NewMatchCtrl', function ($scope, $log,$filter, $state, MatchFact
     $scope.createMatch = function(){
         $log.debug("creating the match");
         MatchFactory.createMatch($scope.match).success(function(data){
-            $log.debug(data);
-
-            $scope.checkinLink = data.match.checkinLink;
-            $scope.regLink = data.match.regLink;
+            $state.go('match', {matchId: data.match.id});
 
         });
     };

@@ -25,7 +25,7 @@
                         <tbody>
                         <tr dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 " >
                             <td><a ui-sref="match({matchId:match.id})"> {{match.startTime | amCalendar}}</a></td>
-                            <td>{{match.checkinLatest | amCalendar }}</td>
+                            <td>{{match.checkinLatest | amDateFormat:'hh:mm a' }}</td>
                             <td>{{match.location}}</td>
                         </tr>
                         </tbody>

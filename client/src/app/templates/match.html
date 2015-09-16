@@ -1,113 +1,50 @@
 <div ng-include="'app/components/navbar/navbar.html'"></div>
 
-<div class="row home-container">
+<div class="home-container">
+    <div class="row ">
+        <div class="col-md-3 highlight">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Location</label>
+                    <div class="col-md-8"><span>{{match.location}}</span></div>
+                </div>
 
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Create a match</h4>
-            </div>
-            <div class="panel-body">
-                <form>
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <label>Location</label>
-                                <input ng-model="match.location" type="text" class="form-control" placeholder="Kellyville Plaza">
-                            </div>
-                        </div>
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Start</label>
+                    <div class="col-md-8">{{match.startTime | amCalendar }}</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Check-in time</label>
+                    <div class="col-md-8">{{match.checkinEarliest | amDateFormat:'hh:mm a' }} - {{match.checkinLatest | amDateFormat:'hh:mm a'  }}</div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Registration code</label>
+                    <div class="col-md-8">
+                        <qrcode size="150" data="{{match.regLink}}" href="{{match.regLink}}"></qrcode>
                     </div>
-
-                    <div class="form-group">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Start time</label>
-                                <a class="dropdown-toggle" id="starttime" role="button" data-toggle="dropdown"
-                                   data-target="#" href="#">
-                                    <div class="input-group">
-                                        <input type="datetime-local" class="form-control"
-                                               data-ng-model="match.startTime"><span
-                                            class="input-group-addon"><i
-                                            class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="match.startTime"
-                                                    data-on-set-time="onTimeSet(newDate, oldDate)"
-                                                    data-min-date="today"
-                                                    data-before-render="beforeRender($dates)"
-                                                    data-datetimepicker-config="{ dropdownSelector: '#starttime',minuteStep: 30 }"/>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <label>End time</label>
-                                <a class="dropdown-toggle" id="endtime" role="button" data-toggle="dropdown"
-                                   data-target="#" href="#">
-                                    <div class="input-group">
-                                        <input type="datetime-local" class="form-control" data-ng-model="match.finishTime"/>
-                                            <span
-                                                    class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="match.finishTime"
-                                                    data-datetimepicker-config="{ dropdownSelector: '#endtime',minuteStep: 30 }"/>
-                                </ul>
-
-
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <label>Earliest Check-in</label>
-                                <a class="dropdown-toggle" id="echeckin" role="button" data-toggle="dropdown"
-                                   data-target="#" href="#">
-                                    <div class="input-group">
-                                        <input type="datetime-local" class="form-control" placeholder=""
-                                               data-ng-model="match.checkinLatest"><span
-                                            class="input-group-addon"><i
-                                            class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="match.checkinEarliest"
-                                                    data-datetimepicker-config="{ dropdownSelector: '#echeckin',minuteStep: 10 }"/>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <label>Latest Check-in</label>
-                                <a class="dropdown-toggle" id="lcheckin" role="button" data-toggle="dropdown"
-                                   data-target="#" href="#">
-                                    <div class="input-group">
-                                        <input type="datetime-local" class="form-control"
-                                               data-ng-model="match.checkinLatest"/>
-                                            <span
-                                                    class="input-group-addon"><i
-                                                    class="glyphicon glyphicon-calendar"></i></span>
-                                    </div>
-                                </a>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                    <datetimepicker data-ng-model="match.checkinLatest"
-                                                    data-datetimepicker-config="{ dropdownSelector: '#lcheckin',minuteStep: 10 }"/>
-                                </ul>
-                            </div>
-                        </div>
-
-                        <div class="control-group">
-                            <label></label>
-
-                            <div class="controls">
-                                <button type="submit" class="btn btn-primary" ng-disabled="!match.location || !match.startTime" ng-click="createMatch()">
-                                    Create
-                                </button>
-                            </div>
-                        </div>
-
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Check-in code</label>
+                    <div class="col-md-8">
+                        <qrcode size="150" data="{{match.checkinLink}}" href="{{match.checkinLink}}"></qrcode>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-3 highlight">
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Registered players</label>
+                    <div class="col-md-8">
+                        <ul>
+                            <li>Crespo Wang</li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+
+        <div class="col-md-3 highlight">
         </div>
     </div>
 </div>
+{{match}}

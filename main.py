@@ -52,7 +52,7 @@ def logout():
 @app.route('/checkin/<matchid>/<code>')
 def match_checkin(matchid, code):
     logging.debug("Checkin match {} code {}".format(matchid, code))
-    checkin_status = MatchHelper.verfy_checkin(matchid, code)
+    checkin_status = MatchHelper.checkin(matchid, code)
     if checkin_status:
         logging.debug("YEEAP")
         return redirect('/#/checkin/{}'.format(matchid))
@@ -60,6 +60,18 @@ def match_checkin(matchid, code):
         logging.debug("NOPPP")
     return redirect('/')
 
+
+@login_required
+@app.route('/reg/<matchid>/<code>')
+def match_registration(matchid, code):
+    logging.debug("register match {} code {}".format(matchid, code))
+    checkin_status = MatchHelper.register(matchid, code)
+    if checkin_status:
+        logging.debug("YEEAP")
+        return redirect('/#/checkin/{}'.format(matchid))
+    else:
+        logging.debug("NOPPP")
+    return redirect('/')
 
 
 @app.errorhandler(404)

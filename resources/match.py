@@ -66,8 +66,10 @@ class MatchResource(Resource):
     @marshal_with(match_resource_fields)
     def get(self, match_id):
         match = Match.getone(match_id)
-        plays = Play.getbyMatch(match_id)
         match.__setattr__('id', match_id)
+
+        match.__setattr__('checkinLink', "http://{}/checkin/{}/{}".format(host_url, match_id, match.checkinCode))
+        match.__setattr__('regLink', "http://{}/reg/{}/{}".format(host_url, match_id, match.regCode))
 
         return {"match": match}
 
@@ -102,8 +104,7 @@ class MatchesResource(Resource):
                              args.get('checkinLatest'), args.get('location'))
 
         match_details['id'] = match.id()
-        match_details['checkinLink'] = "{}/checkin/{}/{}".format(host_url, match.id(), match.get().checkinCode)
-        match_details['regLink'] = "{}/reg/{}/{}".format(host_url, match.id(), match.get().regCode)
+
         return {'match': match_details}
 
     def put(self):
@@ -112,11 +113,21 @@ class MatchesResource(Resource):
 
 
 class MatchHelper():
+
     @classmethod
-    def verfy_checkin(cls, match_id, code):
+    def checkin(cls, match_id, code):
         match = Match.getone(match_id)
-        if code == match.checkinCode:
+        if match and code == match.checkinCode:
             logging.debug("Checkin user {}".format(current_user.key_id))
-            # match.register(current_user)
+            match.checkin(current_user.key_id)
+            return True
+        return False
+
+    @classmethod
+    def register(cls, match_id, code):
+        match = Match.getone(match_id)
+        if match and code == match.regCode:
+            logging.debug("Register user {}".format(current_user.key_id))
+            match.register(current_user.key_id)
             return True
         return False
