@@ -54,9 +54,14 @@ app.config(function($stateProvider, $urlRouterProvider){
             templateUrl: 'app/templates/match-signin-early.html'
         })
         .state('match-signin.late', {
-            url: 'late',
+            url: '/late',
             controller: 'SignInMatchCtrl',
             templateUrl: 'app/templates/match-signin-late.html'
+        })
+        .state('match-signin.dup', {
+            url: '/dup',
+            controller: 'SignInMatchCtrl',
+            templateUrl: 'app/templates/match-signin-dup.html'
         })
         .state('new', {
             url : '^/new-match',

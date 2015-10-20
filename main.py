@@ -43,16 +43,20 @@ api.add_resource(PeopleLoginResource, '/api/people/login')
 api.add_resource(PeopleLogoutResource, '/api/people/logout')
 api.add_resource(PeopleSignUpResource, '/api/people/signup')
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    return redirect('/')
 
-@login_required
 @app.route('/logout')
+@login_required
 def logout():
     logout_user()
     return redirect('/')
 
 
-@login_required
+
 @app.route('/match-signin/<matchid>/<code>')
+@login_required
 def match_signin(matchid, code):
     logging.debug("Sign-in match {} code {}".format(matchid, code))
 
@@ -64,22 +68,25 @@ def match_signin(matchid, code):
         logging.debug("Bad Sign in")
         if checkin_status.get("code") == -1:
             url = "/#/match-signin/{}/early".format(matchid)
-        else:
+        elif checkin_status.get("code") == 1:
             url = "/#/match-signin/{}/late".format(matchid)
+        elif checkin_status.get("code") == 0:
+            url = "/#/match-signin/{}/dup".format(matchid)
 
         return redirect(url)
 
     return redirect('/')
 
 
-@login_required
+
 @app.route('/match-signup/<matchid>/<code>')
+@login_required
 def match_signup(matchid, code):
     logging.debug("Sign-up match {} code {}".format(matchid, code))
     checkin_status = MatchHelper.signup(matchid, code)
     if checkin_status:
         logging.debug("YEEAP")
-        return redirect('/#/signup/{}'.format(matchid))
+        return redirect('/#/match-signup/{}/{}'.format(matchid, code))
     else:
         logging.debug("NOPPP")
     return redirect('/')

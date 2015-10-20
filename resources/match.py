@@ -59,6 +59,7 @@ class MatchSignUp(Resource):
         status = MatchHelper.signup(match_id, code)
         if status:
             match = Match.getone(match_id)
+            match.__setattr__('id', match_id)
             return {"match": match}
         return {"match": None}
 
@@ -78,16 +79,24 @@ class MatchPlayerIn(Resource):
 
 class MatchPlayers(Resource):
 
-    @marshal_with(people_resource_field)
+    @marshal_with(match_people_resource)
     def get(self, match_id):
         match = Match.getone(match_id)
         if match is None:
             raise MatchNotExistsError
         registered_people = []
-
-
         for ple in match.registerdPeople:
-            registered_people.append(ple.get())
+            player = ple.get()
+            play = Play.getbyMatchPeople(match_id, player.key.id())
+
+            registered_people.append({
+                "name": player.name,
+                "id": player.key.id(),
+                "signupTime": play.signupTime,
+                "signinTime": play.signinTime,
+                "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
+                "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
+            })
 
         return {"people": registered_people}
 
@@ -154,17 +163,34 @@ class MatchHelper():
             logging.debug("You are too late for sign in")
             return {"status": False, "reason": "You are too late for sign in", "code": 1}
 
+        people = People.getone(current_user.key_id)
+        if people and people.key in match.participatedPeople:
+            logging.debug("You have already signed in")
+            return {"status": False, "reason": "You have already signed in", "code": 0}
+
         if match and code == match.signinCode:
-            logging.debug("Sign in user {} {}".format(current_user.key_id, current_user.name))
+            logging.debug("Sign in user {}".format(current_user.key_id))
             match.signin(current_user.key_id)
+            play = Play.getbyMatchPeople(match_id, current_user.key_id)
+            play.signinTime = datetime.now()
+            play.put()
+
+
             return {"status": True}
         return {"status": False}
 
     @classmethod
     def signup(cls, match_id, code):
         match = Match.getone(match_id)
+
+        people = People.getone(current_user.key_id)
+        if people and people.key in match.registerdPeople:
+            logging.debug("You have already signed up")
+            return True
+
         if match and code == match.signupCode:
-            logging.debug("Sign up user {} {}".format(current_user.key_id, current_user.name))
+            logging.debug("Sign up user {}".format(current_user.key_id))
             match.signup(current_user.key_id)
+            Play.create(current_user.key_id, match_id)
             return True
         return False

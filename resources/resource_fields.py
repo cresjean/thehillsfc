@@ -18,6 +18,20 @@ people_resource_field = {
     "people": fields.Nested(people_field)
 }
 
+match_people_field = {
+    "id": fields.String,
+    "name": fields.String,
+    "signupTime": UTCTime,
+    "signinTime": UTCTime,
+    "signinLate": fields.Boolean,
+    "signinOntime": fields.Boolean
+}
+
+match_people_resource = {
+    "people": fields.Nested(match_people_field)
+}
+
+
 
 login_resource_field = {
     "username": fields.String,
@@ -50,14 +64,14 @@ matches_resource_fields = {
 
 play_field = {
     "id": fields.String,
-    "match_detail": fields.Nested(match_field),
-    "people_detail": fields.Nested(people_resource_field),
-    "registeredTime": UTCTime,
-    "checkinTime": UTCTime
+    "matchDetail": fields.Nested(match_field),
+    "peopleDetail": fields.Nested(people_resource_field),
+    "signupTime": UTCTime,
+    "signinTime": UTCTime
 }
 
 play_of_match_resource_field = play_field
-play_of_match_resource_field.__delitem__('match_detail')
+play_of_match_resource_field.__delitem__('matchDetail')
 
 plays_resource_field = {
 

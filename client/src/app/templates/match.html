@@ -21,7 +21,7 @@
                 <div class="form-group" ng-if="storage.currentUser.admin">
                     <label class="col-md-4  match-label">Sign-up link</label>
                     <div class="col-md-6">
-                        <input ng-disabled="true" class="form-control" value="{{match.signupLink}}">
+                        <input class="form-control" value="{{match.signupLink}}">
                     </div>
                 </div>
                 <div class="form-group" ng-if="storage.currentUser.admin">
@@ -33,7 +33,7 @@
                 </div>
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
-                        <button ng-if="alreadyIn" disabled="disabled" type="button" class="btn btn-success">You have already signed in</button>
+                        <button ng-if="alreadyIn" disabled="disabled" type="button" class="btn btn-success">You have already signed up</button>
                         <button ng-if="!alreadyIn" type="button" class="btn btn-success" ui-sref="match-signup({matchId:match.id, matchCode: match.signupCode})">Sign Up</button>
                     </div>
                 </div>
@@ -58,7 +58,10 @@
                         <tbody>
                         <tr dir-paginate="player in players | itemsPerPage: 11 ">
                             <td>{{player.name}}</td>
-                            <td>{{player.signin}}</td>
+                            <td>
+                                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ng-if="player.signinOntime"></span>
+                                <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" ng-if="player.signinLate"></span>
+                            </td>
                         </tr>
                         <tr ng-if="!players.length"><td colspan="2">No one has signed up. Be the first one!</td></tr>
                         </tbody>

@@ -7,7 +7,7 @@ from datastore.match import Match
 class Play(ndb.Model):
     people = ndb.KeyProperty(kind=People)
     match = ndb.KeyProperty(kind=Match)
-    registeredTime = ndb.DateTimeProperty(auto_now_add=True)
+    signupTime = ndb.DateTimeProperty(auto_now_add=True)
     signinTime = ndb.DateTimeProperty()
 
 
@@ -21,6 +21,11 @@ class Play(ndb.Model):
     def getall(cls):
         q = cls.query()
         return q.fetch()
+
+    @classmethod
+    def getbyMatchPeople(cls, matchId, peopleId):
+        return cls.query(cls.match == ndb.Key('Match', long(matchId)),
+                         cls.people == ndb.Key("People", long(peopleId))).get()
 
     @classmethod
     def getbyMatch(cls, matchId):

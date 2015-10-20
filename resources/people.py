@@ -14,7 +14,7 @@ from flask.ext.login import current_user
 parser = reqparse.RequestParser()
 
 
-parser.add_argument("name", type=str, location='json')
+parser.add_argument("name", location='json')
 parser.add_argument("position", type=str, location='json')
 parser.add_argument("wechatId", type=str, location='json')
 parser.add_argument("username", type=str, location='json')
@@ -37,7 +37,7 @@ class PeopleSignUpResource(Flask_Resource):
             people = People.create(name, username)
             people.get().genpass(password)
             login_user(User.get(username), remember=True)
-            return {'userId': people.id(), "username": username, "name": name, "admin": False}
+            return {'id': people.id(), "username": username, "name": name, "admin": False}
 
 
     def get(self):
