@@ -31,11 +31,12 @@ match_field = {
     "location": fields.String,
     "startTime": UTCTime,
     "finishTime": UTCTime,
-    "checkinEarliest": UTCTime,
-    "checkinLatest": UTCTime,
+    "signinEarliest": UTCTime,
+    "signinLatest": UTCTime,
     "createdTime": UTCTime,
-    "checkinLink": fields.String,
-    "regLink": fields.String
+    "signinLink": fields.String,
+    "signupLink": fields.String,
+    "signupCode": fields.String
 }
 
 match_resource_fields = {

@@ -23,11 +23,11 @@ app.controller('NewMatchCtrl', function ($scope, $log,$filter, $state, MatchFact
 
         var echeckinTimeInput = new Date(newTime.getTime());
         echeckinTimeInput.setTime(echeckinTimeInput.getTime() - 60 * 1000 * 30);
-        $scope.match.checkinEarliest  = echeckinTimeInput;
+        $scope.match.signinEarliest  = echeckinTimeInput;
 
         var lcheckinTimeInput = new Date(newTime.getTime());
         lcheckinTimeInput.setTime(lcheckinTimeInput.getTime() - 60 * 1000 * 5);
-        $scope.match.checkinLatest  = lcheckinTimeInput;
+        $scope.match.signinLatest  = lcheckinTimeInput;
 
 
     };

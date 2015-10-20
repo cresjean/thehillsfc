@@ -13,18 +13,6 @@ app.controller('HomeCtrl', function ($scope, $log,$filter, MatchFactory) {
             $scope.matches =  data['matches'];
         }
     );
-  }).
-factory('MatchFactory', function ($http){
-      return {
-            getAllMatches: function(){
-                return $http.get('/api/matches');
-            },
-            createMatch: function(match){
-                return $http.post('/api/matches', match);
-            },
-            getMatch: function(match_id){
-                return $http.get('/api/matches/'+match_id);
-            }
-      }
-    });
+  })
+;
 

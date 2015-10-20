@@ -8,20 +8,20 @@ class Match(ndb.Model):
     location = ndb.StringProperty(indexed=False)
     startTime = ndb.DateTimeProperty()
     finishTime = ndb.DateTimeProperty()
-    checkinEarliest = ndb.DateTimeProperty()
-    checkinLatest = ndb.DateTimeProperty()
+    signinEarliest = ndb.DateTimeProperty()
+    signinLatest = ndb.DateTimeProperty()
     createdTime = ndb.DateTimeProperty(auto_now_add=True)
-    regCode = ndb.StringProperty()
-    checkinCode = ndb.StringProperty()
+    signupCode = ndb.StringProperty()
+    signinCode = ndb.StringProperty()
     registerdPeople = ndb.KeyProperty(kind=People, repeated=True)
     participatedPeople = ndb.KeyProperty(kind=People, repeated=True)
 
     @classmethod
-    def create(cls, start, finish, checkinEarliest, checkInLatest, location):
+    def create(cls, start, finish, signinEarliest, checkInLatest, location):
         match = Match()
         match.populate(location=location, startTime=start, finishTime=finish,
-                       checkinLatest=checkInLatest, checkinEarliest=checkinEarliest,
-                       regCode=cls.code_generator(), checkinCode=cls.code_generator())
+                       signinLatest=checkInLatest, signinEarliest=signinEarliest,
+                       signupCode=cls.code_generator(), signinCode=cls.code_generator())
         return match.put()
 
     @classmethod
@@ -33,11 +33,11 @@ class Match(ndb.Model):
         q = cls.query()
         return q.fetch()
 
-    def register(self, peopleId):
+    def signup(self, peopleId):
         self.registerdPeople.append(ndb.Key('People', long(peopleId)))
         self.put()
 
-    def checkin(self, peopleId):
+    def signin(self, peopleId):
         self.participatedPeople.append(ndb.Key('People', long(peopleId)))
         self.put()
 

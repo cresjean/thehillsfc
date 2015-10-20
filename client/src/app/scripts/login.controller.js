@@ -24,9 +24,9 @@ app.controller('LoginCtrl', function ($scope, $log, $state, $rootScope, LoginFac
     };
 })
     .controller('LogoutCtrl', function($scope, $log, $rootScope, $localStorage, LoginFactory, $state){
-        $log.debug('Logout Ctrl');
+            $log.debug('Logout Ctrl');
             $rootScope.storage.currentUser = undefined;
-        LoginFactory.logout().success(function(){
+            LoginFactory.logout().success(function(){
             $state.go('login');
         });
 

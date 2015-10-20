@@ -21,6 +21,29 @@ parser.add_argument("username", type=str, location='json')
 parser.add_argument("password", type=str, location='json')
 
 
+class PeopleSignUpResource(Flask_Resource):
+
+    def post(self):
+        args = parser.parse_args()
+        password = args.get('password')
+        username = args.get('username')
+        name = args.get('name')
+        logging.debug("what's email {}".format(username))
+        people = People.getbyusername(username)
+        if people:
+            logging.debug("username already taken")
+            raise UserAlreadyExistsError
+        else:
+            people = People.create(name, username)
+            people.get().genpass(password)
+            login_user(User.get(username), remember=True)
+            return {'userId': people.id(), "username": username, "name": name, "admin": False}
+
+
+    def get(self):
+        args = parser.parse_args()
+
+
 class PeopleLogoutResource(Flask_Resource):
 
     def get(self):
@@ -51,7 +74,7 @@ class PeopleLoginResource(Flask_Resource):
         if not login_status:
             raise InvalidLoginError
 
-        return {"username": username, "name": people.name, "admin": people.admin}
+        return {"username": username, "name": people.name, "admin": people.admin, "id": people.key.id()}
 
 
 class PeopleResource(Resource):

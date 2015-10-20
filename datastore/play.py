@@ -8,7 +8,7 @@ class Play(ndb.Model):
     people = ndb.KeyProperty(kind=People)
     match = ndb.KeyProperty(kind=Match)
     registeredTime = ndb.DateTimeProperty(auto_now_add=True)
-    checkinTime = ndb.DateTimeProperty()
+    signinTime = ndb.DateTimeProperty()
 
 
     @classmethod

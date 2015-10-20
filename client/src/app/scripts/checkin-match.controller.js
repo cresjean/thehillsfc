@@ -4,7 +4,3 @@
 
 'use strict';
 
-app.controller('CheckinMatchCtrl', function ($scope, $log,$filter, $state, match) {
-    $scope.match = match.data.match;
-
-});

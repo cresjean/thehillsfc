@@ -5,6 +5,7 @@ import logging
 from datetime import datetime
 from time import strptime, mktime
 from datastore.match import Match
+from datastore.people import People
 from resource_fields import *
 from exceptions import MatchNotExistsError
 from datastore.play import Play
@@ -33,19 +34,49 @@ parser.add_argument("startTime", type=datetime_parser, location='json', required
 parser.add_argument("finishTime", type=datetime_parser, location='json', required=True,
                     help="Game finish time cannot be blank")
 
-parser.add_argument("checkinLatest", type=datetime_parser, location='json', required=True,
+parser.add_argument("signinLatest", type=datetime_parser, location='json', required=True,
                     help="Latest check-in time cannot be blank")
 
-parser.add_argument("checkinEarliest", type=datetime_parser, location='json', required=True,
+parser.add_argument("signinEarliest", type=datetime_parser, location='json', required=True,
                     help="Earliest check-in time cannot be blank")
 
 parser.add_argument("location", type=str, location='json', required=True,
                     help="Location cannot be blank")
 
+signup_parser = reqparse.RequestParser()
+
+signup_parser.add_argument("code", type=str, location='json', required=True,
+                    help="Code cannot be blank")
+
+
+class MatchSignUp(Resource):
+
+    @marshal_with(match_resource_fields)
+    def post(self, match_id):
+        logging.debug("SignMeUP")
+        args = signup_parser.parse_args()
+        code = args.get('code')
+        status = MatchHelper.signup(match_id, code)
+        if status:
+            match = Match.getone(match_id)
+            return {"match": match}
+        return {"match": None}
+
+
+class MatchPlayerIn(Resource):
+
+    def get(self, match_id, people_id):
+        match = Match.getone(match_id)
+        if match is None:
+            raise MatchNotExistsError
+        people = People.getone(people_id)
+        if people.key in match.registerdPeople:
+            return {"in": True}
+        else:
+            return {"in": False}
 
 
 class MatchPlayers(Resource):
-
 
     @marshal_with(people_resource_field)
     def get(self, match_id):
@@ -54,10 +85,10 @@ class MatchPlayers(Resource):
             raise MatchNotExistsError
         registered_people = []
 
+
         for ple in match.registerdPeople:
             registered_people.append(ple.get())
 
-        logging.debug(registered_people)
         return {"people": registered_people}
 
 
@@ -68,8 +99,9 @@ class MatchResource(Resource):
         match = Match.getone(match_id)
         match.__setattr__('id', match_id)
 
-        match.__setattr__('checkinLink', "http://{}/checkin/{}/{}".format(host_url, match_id, match.checkinCode))
-        match.__setattr__('regLink', "http://{}/reg/{}/{}".format(host_url, match_id, match.regCode))
+        match.__setattr__('signinLink', "http://{}/match-signin/{}/{}".format(host_url, match_id, match.signinCode))
+        match.__setattr__('signupLink', "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode))
+        match.__setattr__('signupCode', match.signupCode)
 
         return {"match": match}
 
@@ -86,12 +118,10 @@ class MatchesResource(Resource):
                 "location": match.location,
                 "startTime": match.startTime,
                 "finishTime": match.finishTime,
-                "checkinEarliest": match.checkinEarliest,
-                "checkinLatest": match.checkinLatest,
+                "signinEarliest": match.signinEarliest,
+                "signinLatest": match.signinLatest,
                 "createdTime": match.createdTime
             })
-
-
         return {'matches': matches_json}
 
 
@@ -100,8 +130,8 @@ class MatchesResource(Resource):
         logging.debug("creating match")
         args = parser.parse_args()
         match_details = args
-        match = Match.create(args.get('startTime'), args.get('finishTime'), args.get('checkinEarliest'),
-                             args.get('checkinLatest'), args.get('location'))
+        match = Match.create(args.get('startTime'), args.get('finishTime'), args.get('signinEarliest'),
+                             args.get('signinLatest'), args.get('location'))
 
         match_details['id'] = match.id()
 
@@ -115,19 +145,26 @@ class MatchesResource(Resource):
 class MatchHelper():
 
     @classmethod
-    def checkin(cls, match_id, code):
+    def signin(cls, match_id, code):
         match = Match.getone(match_id)
-        if match and code == match.checkinCode:
-            logging.debug("Checkin user {}".format(current_user.key_id))
-            match.checkin(current_user.key_id)
-            return True
-        return False
+        if datetime.now() < match.signinEarliest:
+            logging.debug("You are too early for sign in")
+            return {"status": False, "reason": "You are too early for sign in", "code": -1}
+        if datetime.now() > match.signinLatest:
+            logging.debug("You are too late for sign in")
+            return {"status": False, "reason": "You are too late for sign in", "code": 1}
+
+        if match and code == match.signinCode:
+            logging.debug("Sign in user {} {}".format(current_user.key_id, current_user.name))
+            match.signin(current_user.key_id)
+            return {"status": True}
+        return {"status": False}
 
     @classmethod
-    def register(cls, match_id, code):
+    def signup(cls, match_id, code):
         match = Match.getone(match_id)
-        if match and code == match.regCode:
-            logging.debug("Register user {}".format(current_user.key_id))
-            match.register(current_user.key_id)
+        if match and code == match.signupCode:
+            logging.debug("Sign up user {} {}".format(current_user.key_id, current_user.name))
+            match.signup(current_user.key_id)
             return True
         return False

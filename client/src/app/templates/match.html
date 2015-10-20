@@ -2,49 +2,71 @@
 
 <div class="home-container">
     <div class="row ">
-        <div class="col-md-3 highlight">
+        <div class="col-md-10 highlight">
             <form class="form-horizontal">
                 <div class="form-group">
                     <label class="col-md-4  match-label">Location</label>
-                    <div class="col-md-8"><span>{{match.location}}</span></div>
+                    <div class="col-md-6"><span>{{match.location}}</span></div>
                 </div>
 
                 <div class="form-group">
                     <label class="col-md-4  match-label">Start</label>
-                    <div class="col-md-8">{{match.startTime | amCalendar }}</div>
+                    <div class="col-md-6">{{match.startTime | amCalendar }}</div>
                 </div>
 
                 <div class="form-group">
-                    <label class="col-md-4  match-label">Check-in time</label>
-                    <div class="col-md-8">{{match.checkinEarliest | amDateFormat:'hh:mm a' }} - {{match.checkinLatest | amDateFormat:'hh:mm a'  }}</div>
+                    <label class="col-md-4  match-label">Sign-in time</label>
+                    <div class="col-md-6">{{match.signinEarliest | amDateFormat:'hh:mm a' }} - {{match.signinLatest | amDateFormat:'hh:mm a'  }}</div>
                 </div>
-                <div class="form-group">
-                    <label class="col-md-4  match-label">Registration code</label>
-                    <div class="col-md-8">
-                        <qrcode size="150" data="{{match.regLink}}" href="{{match.regLink}}"></qrcode>
+                <div class="form-group" ng-if="storage.currentUser.admin">
+                    <label class="col-md-4  match-label">Sign-up link</label>
+                    <div class="col-md-6">
+                        <input ng-disabled="true" class="form-control" value="{{match.signupLink}}">
+                    </div>
+                </div>
+                <div class="form-group" ng-if="storage.currentUser.admin">
+                    <label class="col-md-4  match-label">Sign-in code</label>
+                    <div class="col-md-6">
+                        <p>Print the following QR code</p>
+                        <qrcode size="250" data="{{match.signinLink}}" href="{{match.signinLink}}"></qrcode>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="col-md-4  match-label">Check-in code</label>
-                    <div class="col-md-8">
-                        <qrcode size="150" data="{{match.checkinLink}}" href="{{match.checkinLink}}"></qrcode>
+                    <div class="col-md-6 col-md-offset-4">
+                        <button ng-if="alreadyIn" disabled="disabled" type="button" class="btn btn-success">You have already signed in</button>
+                        <button ng-if="!alreadyIn" type="button" class="btn btn-success" ui-sref="match-signup({matchId:match.id, matchCode: match.signupCode})">Sign Up</button>
                     </div>
                 </div>
             </form>
         </div>
-        <div class="col-md-3 highlight">
-                <div class="form-group">
-                    <label class="col-md-4  match-label">Registered players</label>
-                    <div class="col-md-8">
-                        <ul>
-                            <li>Crespo Wang</li>
-                        </ul>
-                    </div>
-                </div>
-        </div>
+    </div>
+    <div class="row">
 
-        <div class="col-md-3 highlight">
-        </div>
+            <div class="col-md-6 col-md-offset-2 highlight">
+                    <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Players already signed-up
+                            </th>
+                            <th>
+                                Sign-in
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr dir-paginate="player in players | itemsPerPage: 11 ">
+                            <td>{{player.name}}</td>
+                            <td>{{player.signin}}</td>
+                        </tr>
+                        <tr ng-if="!players.length"><td colspan="2">No one has signed up. Be the first one!</td></tr>
+                        </tbody>
+
+                    </table>
+                    <dir-pagination-controls></dir-pagination-controls>
+                </div>
+
+            </div>
     </div>
 </div>
-{{match}}

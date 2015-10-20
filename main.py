@@ -1,8 +1,8 @@
 import logging
 from flask import Flask
 from flask import redirect
-from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper
-from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource
+from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp
+from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource
 from resources.play import PlayResource, PlayMatchResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
@@ -31,14 +31,17 @@ custom_errors = {
 
 api = Api(app, errors=custom_errors)
 api.add_resource(MatchesResource, '/api/matches')
+api.add_resource(MatchSignUp, '/api/matches/<match_id>/signmeup')
 api.add_resource(MatchResource, '/api/matches/<match_id>')
 api.add_resource(PeoplesResource, '/api/people')
 api.add_resource(PeopleResource, '/api/people/<people_id>')
 api.add_resource(PlayResource, '/api/play')
 api.add_resource(MatchPlayers, '/api/matches/<match_id>/registered-people')
 api.add_resource(PlayMatchResource, '/api/matches/<match_id>/plays')
+api.add_resource(MatchPlayerIn, '/api/matches/<match_id>/<people_id>')
 api.add_resource(PeopleLoginResource, '/api/people/login')
 api.add_resource(PeopleLogoutResource, '/api/people/logout')
+api.add_resource(PeopleSignUpResource, '/api/people/signup')
 
 
 @login_required
@@ -49,26 +52,34 @@ def logout():
 
 
 @login_required
-@app.route('/checkin/<matchid>/<code>')
-def match_checkin(matchid, code):
-    logging.debug("Checkin match {} code {}".format(matchid, code))
-    checkin_status = MatchHelper.checkin(matchid, code)
-    if checkin_status:
-        logging.debug("YEEAP")
-        return redirect('/#/checkin/{}'.format(matchid))
+@app.route('/match-signin/<matchid>/<code>')
+def match_signin(matchid, code):
+    logging.debug("Sign-in match {} code {}".format(matchid, code))
+
+    checkin_status = MatchHelper.signin(matchid, code)
+    if checkin_status and checkin_status.get('status'):
+        logging.debug("Good Sign in")
+        return redirect('/#/match-signin/{}/success'.format(matchid))
     else:
-        logging.debug("NOPPP")
+        logging.debug("Bad Sign in")
+        if checkin_status.get("code") == -1:
+            url = "/#/match-signin/{}/early".format(matchid)
+        else:
+            url = "/#/match-signin/{}/late".format(matchid)
+
+        return redirect(url)
+
     return redirect('/')
 
 
 @login_required
-@app.route('/reg/<matchid>/<code>')
-def match_registration(matchid, code):
-    logging.debug("register match {} code {}".format(matchid, code))
-    checkin_status = MatchHelper.register(matchid, code)
+@app.route('/match-signup/<matchid>/<code>')
+def match_signup(matchid, code):
+    logging.debug("Sign-up match {} code {}".format(matchid, code))
+    checkin_status = MatchHelper.signup(matchid, code)
     if checkin_status:
         logging.debug("YEEAP")
-        return redirect('/#/checkin/{}'.format(matchid))
+        return redirect('/#/signup/{}'.format(matchid))
     else:
         logging.debug("NOPPP")
     return redirect('/')
