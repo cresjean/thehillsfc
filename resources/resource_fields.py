@@ -24,7 +24,8 @@ match_people_field = {
     "signupTime": UTCTime,
     "signinTime": UTCTime,
     "signinLate": fields.Boolean,
-    "signinOntime": fields.Boolean
+    "signinOntime": fields.Boolean,
+    "admin": fields.Boolean
 }
 
 match_people_resource = {

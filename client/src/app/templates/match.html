@@ -60,10 +60,11 @@
                         <tr dir-paginate="player in players | itemsPerPage: 11 ">
                             <td>{{$index + 1}}</td>
 
-                            <td>{{player.name}}</td>
+                            <td>{{player.name}} <span class="label label-primary" aria-hidden="true" ng-if="player.admin">C</span></td>
                             <td>
-                                <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ng-if="player.signinOntime"></span>
-                                <span class="glyphicon glyphicon-thumbs-down" aria-hidden="true" ng-if="player.signinLate"></span>
+                                <span class="label label-default" aria-hidden="true" ng-if="player.signinTime == 0">not yet</span>
+                                <span class="label label-success" aria-hidden="true" ng-if="player.signinOntime">on time</span>
+                                <span class="label label-warning" aria-hidden="true" ng-if="player.signinLate">late</span>
                             </td>
                         </tr>
                         <tr ng-if="!players.length"><td colspan="2">No one has signed up. Be the first one!</td></tr>

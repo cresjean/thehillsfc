@@ -98,6 +98,7 @@ class MatchPlayers(Resource):
                     "id": player.key.id(),
                     "signupTime": play.signupTime,
                     "signinTime": play.signinTime,
+                    "admin": player.admin,
                     "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })
