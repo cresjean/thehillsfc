@@ -20,6 +20,32 @@ parser.add_argument("wechatId", type=str, location='json')
 parser.add_argument("username", type=str, location='json')
 parser.add_argument("password", type=str, location='json')
 
+update_parser = reqparse.RequestParser()
+update_parser.add_argument("name", location='json')
+update_parser.add_argument("password", location='json')
+
+class MeResource(Resource):
+
+    @marshal_with(people_field)
+    def get(self):
+        me = People.getone(current_user.key_id)
+        me.password = 'itissecret'
+        return me
+
+    def post(self):
+        args = update_parser.parse_args()
+        name = args.get('name')
+        password = args.get('password')
+        logging.debug("update name {} and password {}".format(name.encode('utf-8'), password))
+        if name:
+            me = People.getone(current_user.key_id)
+            me.name = name
+            if password != 'itissecret':
+                me.genpass(password)
+            me.put()
+        return {"status": True}
+
+
 
 class PeopleSignUpResource(Flask_Resource):
 

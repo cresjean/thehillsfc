@@ -1,0 +1,34 @@
+<div ng-include="'app/components/navbar/navbar.html'"></div>
+
+<div class="home-container">
+    <div class="row ">
+        <div class="col-md-10 highlight">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Name</label>
+
+                    <div class="col-md-6"><input class="form-control" data-ng-model="me.name" value="{{me.name}}"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Password</label>
+
+                    <div class="col-md-6"><input type="password" class="form-control" data-ng-model="me.password" value="{{me.password}}"></div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4  match-label">Email</label>
+
+                    <div class="col-md-6"><input ng-disabled="true" class="form-control" data-ng-model="me.username" value="{{me.username}}"></div>
+                </div>
+                <div class="control-group">
+                    <label class="col-md-4  match-label"></label>
+
+                    <div class="controls col-md-6">
+                        <button type="submit" class="btn btn-primary" ng-disabled="!me.name" ng-click="updateMe()">
+                            Update
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

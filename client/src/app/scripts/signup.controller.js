@@ -23,4 +23,4 @@ app.controller('SignUpCtrl', function ($scope, $log, $state, $rootScope, $localS
                 return $http.post('/api/people/signup', credentials);
             }
         }
-    });;
+    });

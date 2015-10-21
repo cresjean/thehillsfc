@@ -11,7 +11,9 @@ people_field = {
     "qqId": fields.String,
     "wechatId": fields.String,
     "facebookId": fields.String,
-    "createdTime": UTCTime
+    "createdTime": UTCTime,
+    "username": fields.String,
+    "password": fields.String
 }
 
 people_resource_field = {

@@ -79,6 +79,19 @@ app.config(function($stateProvider, $urlRouterProvider){
                 requireLogin: false
             }
         })
+        .state('settings', {
+            url: '^/settings',
+            controller: 'SettingsCtrl',
+            templateUrl: 'app/templates/settings.html',
+            data: {
+                requireLogin: false
+            },
+            resolve:{
+                me: function (SettingsFactory) {
+                    return SettingsFactory.getMe();
+                }
+            }
+        })
         .state('login', {
             url: '^/login',
             templateUrl: 'app/templates/login.html',
