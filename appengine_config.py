@@ -15,7 +15,7 @@ IS_LOCAL_DEV_SERVER = True if not SERVER_SOFTWARE or SERVER_SOFTWARE.startswith(
 
 ENVIRONMENTS = {
     "thehillsfc":{
-        "host_url": "thehillsfc.com"
+        "host_url": "www.thehillsfc.com"
     },
     "dev-thehillsfc": {
         "host_url": "127.0.0.1:8090"

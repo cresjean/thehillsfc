@@ -47,6 +47,7 @@
                     <table class="table table-striped">
                         <thead>
                         <tr>
+                            <th>#</th>
                             <th>
                                 Players already signed-up
                             </th>
@@ -57,6 +58,8 @@
                         </thead>
                         <tbody>
                         <tr dir-paginate="player in players | itemsPerPage: 11 ">
+                            <td>{{$index + 1}}</td>
+
                             <td>{{player.name}}</td>
                             <td>
                                 <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true" ng-if="player.signinOntime"></span>

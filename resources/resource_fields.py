@@ -50,7 +50,8 @@ match_field = {
     "createdTime": UTCTime,
     "signinLink": fields.String,
     "signupLink": fields.String,
-    "signupCode": fields.String
+    "signupCode": fields.String,
+    "nosignups": fields.Integer
 }
 
 match_resource_fields = {

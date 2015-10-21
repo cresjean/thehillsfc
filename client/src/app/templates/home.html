@@ -15,7 +15,10 @@
                                 Match Start
                             </th>
                             <th>
-                                Latest Check-in
+                                No. of Sign-ups
+                            </th>
+                            <th>
+                                Sign-in
                             </th>
                             <th>
                                 Location
@@ -25,7 +28,8 @@
                         <tbody>
                         <tr dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 " >
                             <td><a ui-sref="match({matchId:match.id})"> {{match.startTime | amCalendar}}</a></td>
-                            <td>{{match.signinLatest | amDateFormat:'hh:mm a' }}</td>
+                            <td>{{match.nosignups}}</td>
+                            <td>{{match.signinEarliest | amDateFormat:'hh:mm a' }} - {{match.signinLatest | amDateFormat:'hh:mm a'  }}</td>
                             <td>{{match.location}}</td>
                         </tr>
                         </tbody>

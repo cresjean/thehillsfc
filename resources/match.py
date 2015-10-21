@@ -2,6 +2,7 @@ __author__ = 'crespowang'
 
 from flask_restful import reqparse, marshal_with, fields
 import logging
+from google.appengine.api import memcache
 from datetime import datetime
 from time import strptime, mktime
 from datastore.match import Match
@@ -81,22 +82,28 @@ class MatchPlayers(Resource):
 
     @marshal_with(match_people_resource)
     def get(self, match_id):
-        match = Match.getone(match_id)
-        if match is None:
-            raise MatchNotExistsError
-        registered_people = []
-        for ple in match.registerdPeople:
-            player = ple.get()
-            play = Play.getbyMatchPeople(match_id, player.key.id())
+        registered_people = memcache.get(match_id, "match_players")
+        if not registered_people:
 
-            registered_people.append({
-                "name": player.name,
-                "id": player.key.id(),
-                "signupTime": play.signupTime,
-                "signinTime": play.signinTime,
-                "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
-                "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
-            })
+            match = Match.getone(match_id)
+            if match is None:
+                raise MatchNotExistsError
+            registered_people = []
+            for ple in match.registerdPeople:
+                player = ple.get()
+                play = Play.getbyMatchPeople(match_id, player.key.id())
+
+                registered_people.append({
+                    "name": player.name,
+                    "id": player.key.id(),
+                    "signupTime": play.signupTime,
+                    "signinTime": play.signinTime,
+                    "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
+                    "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
+                })
+            memcache.set(match_id, registered_people, namespace="match_players")
+        else:
+            logging.debug("get match players from memcache")
 
         return {"people": registered_people}
 
@@ -105,32 +112,50 @@ class MatchResource(Resource):
 
     @marshal_with(match_resource_fields)
     def get(self, match_id):
-        match = Match.getone(match_id)
-        match.__setattr__('id', match_id)
+        match_dict = memcache.get(match_id, "match")
+        if not match_dict:
+            match = Match.getone(match_id)
+            match_dict = match.to_dict()
+            match_dict['id'] = match_id
+            match_dict['signinLink'] = "http://{}/match-signin/{}/{}".format(host_url, match_id, match.signinCode)
+            match_dict['signupLink'] = "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode)
+            match_dict['signupCode'] = match.signupCode
 
-        match.__setattr__('signinLink', "http://{}/match-signin/{}/{}".format(host_url, match_id, match.signinCode))
-        match.__setattr__('signupLink', "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode))
-        match.__setattr__('signupCode', match.signupCode)
+            # match.__setattr__('id', match_id)
+            #
+            # match.__setattr__('signinLink', "http://{}/match-signin/{}/{}".format(host_url, match_id, match.signinCode))
+            # match.__setattr__('signupLink', "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode))
+            # match.__setattr__('signupCode', match.signupCode)
 
-        return {"match": match}
+            memcache.set(match_id, match_dict, namespace="match")
+        else:
+            logging.debug("get match info from memcache {}")
+
+        return {"match": match_dict}
 
 
 class MatchesResource(Resource):
 
     @marshal_with(matches_resource_fields)
     def get(self):
-        matches = Match.getall()
-        matches_json = []
-        for match in matches:
-            matches_json.append({
-                "id": match.key.id(),
-                "location": match.location,
-                "startTime": match.startTime,
-                "finishTime": match.finishTime,
-                "signinEarliest": match.signinEarliest,
-                "signinLatest": match.signinLatest,
-                "createdTime": match.createdTime
-            })
+        matches_json = memcache.get("matches")
+        if not matches_json:
+            matches = Match.getall()
+            matches_json = []
+            for match in matches:
+                matches_json.append({
+                    "id": match.key.id(),
+                    "location": match.location,
+                    "startTime": match.startTime,
+                    "finishTime": match.finishTime,
+                    "signinEarliest": match.signinEarliest,
+                    "signinLatest": match.signinLatest,
+                    "createdTime": match.createdTime,
+                    "nosignups": len(match.registerdPeople)
+                })
+            memcache.set("matches", matches_json)
+        else:
+            logging.debug("get matches from memcache")
         return {'matches': matches_json}
 
 
@@ -144,6 +169,7 @@ class MatchesResource(Resource):
 
         match_details['id'] = match.id()
 
+        memcache.flush_all()
         return {'match': match_details}
 
     def put(self):
@@ -174,6 +200,7 @@ class MatchHelper():
             play = Play.getbyMatchPeople(match_id, current_user.key_id)
             play.signinTime = datetime.now()
             play.put()
+            memcache.flush_all()
 
 
             return {"status": True}
@@ -192,5 +219,6 @@ class MatchHelper():
             logging.debug("Sign up user {}".format(current_user.key_id))
             match.signup(current_user.key_id)
             Play.create(current_user.key_id, match_id)
+            memcache.flush_all()
             return True
         return False
