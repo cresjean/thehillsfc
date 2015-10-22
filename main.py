@@ -3,7 +3,7 @@ from flask import Flask
 from flask import redirect
 from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource, MeResource
-from resources.play import PlayResource, PlayMatchResource
+from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
 
@@ -26,6 +26,10 @@ custom_errors = {
     'MatchNotExistsError': {
         'message': "The match ID does not exist",
         'status': 404,
+    },
+    'PlayNotExistsError': {
+        'message': "The play ID does not exist",
+        'status': 404,
     }
 }
 
@@ -37,9 +41,11 @@ api.add_resource(PeoplesResource, '/api/people')
 api.add_resource(MeResource, '/api/people/me')
 api.add_resource(PeopleResource, '/api/people/<people_id>')
 api.add_resource(PlayResource, '/api/play')
+api.add_resource(PlayTeamResource, '/api/play/<play_id>/teamup')
 api.add_resource(MatchPlayers, '/api/matches/<match_id>/registered-people')
 api.add_resource(PlayMatchResource, '/api/matches/<match_id>/plays')
 api.add_resource(MatchPlayerIn, '/api/matches/<match_id>/<people_id>')
+
 api.add_resource(PeopleLoginResource, '/api/people/login')
 api.add_resource(PeopleLogoutResource, '/api/people/logout')
 api.add_resource(PeopleSignUpResource, '/api/people/signup')

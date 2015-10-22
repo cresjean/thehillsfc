@@ -3,13 +3,17 @@ from flask_restful import reqparse, marshal_with, fields
 import logging
 from auth import Resource
 from resource_fields import *
+from exceptions import PlayNotExistsError
 from datastore.match import Match
 from datastore.play import Play
-
+from google.appengine.api import memcache
 parser = reqparse.RequestParser()
 
 parser.add_argument("peopleId", type=int, location='json', required=True, help="People ID cannot be blank")
 parser.add_argument("matchId", type=int, location='json', required=True, help="Match ID cannot be blank")
+
+teamup_parser = reqparse.RequestParser()
+teamup_parser.add_argument("team", type=str, location='json', required=True, help="Team cannot be blank")
 
 class PlayMatchResource(Resource):
 
@@ -23,6 +27,19 @@ class PlayMatchResource(Resource):
         return {"plays": plays}
 
 
+
+class PlayTeamResource(Resource):
+
+    def post(self, play_id):
+        play = Play.getone(play_id)
+        if not play:
+            raise PlayNotExistsError
+        args = teamup_parser.parse_args()
+        team = args.get('team')
+        play.team = team
+        play.put()
+        memcache.flush_all()
+        return {"status": True}
 
 class PlayResource(Resource):
 

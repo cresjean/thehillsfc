@@ -22,12 +22,14 @@ people_resource_field = {
 
 match_people_field = {
     "id": fields.String,
+    "playId": fields.String,
     "name": fields.String,
     "signupTime": UTCTime,
     "signinTime": UTCTime,
     "signinLate": fields.Boolean,
     "signinOntime": fields.Boolean,
-    "admin": fields.Boolean
+    "admin": fields.Boolean,
+    "team": fields.String
 }
 
 match_people_resource = {

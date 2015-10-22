@@ -16,7 +16,7 @@ class User(UserMixin):
         logging.debug("Login {}".format(username))
         people = People.getbyusername(username)
         if not people:
-            raise UserNotFoundError()
+            raise UserNotFoundError
         self.username = username
         self.name = people.name
         self.id = people.username
@@ -29,6 +29,7 @@ class User(UserMixin):
         try:
             return self_class(username)
         except UserNotFoundError:
+            logging.error("username {} is not found".format(username))
             return None
 
 

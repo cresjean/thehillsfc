@@ -12,10 +12,7 @@ app
             SettingsFactory.updateMe({"name": $scope.me.name, "password": $scope.me.password}).success(function(data){
                 $state.go('settings');
             });
-
         }
-
-
 })
     .factory('SettingsFactory', function ($http){
         return {

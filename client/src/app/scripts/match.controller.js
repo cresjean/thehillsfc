@@ -4,13 +4,54 @@
 'use strict';
 
 app
-    .controller('MatchCtrl', function ($scope, $log, MatchFactory, $stateParams, match, isIn) {
+    .controller('MatchCtrl', function ($scope, $log, MatchFactory, $stateParams, match, isIn, players) {
     $log.debug("Match Ctrl");
     $scope.match = match.data.match;
     $scope.alreadyIn = isIn.data.in;
-    MatchFactory.getPlayers($stateParams.matchId).success(function(data){
-        $scope.players = data.people;
-    });
+    //$scope.players = players.data.people;
+    //MatchFactory.getPlayers($stateParams.matchId).success(function(data){
+    //    $scope.players = data.people;
+    //    var teams = {};
+    //    angular.forEach($scope.players, function(player){
+    //        teams[player.id] = player.team;
+    //
+    //    });
+    //    $scope.teams = teams;
+    //
+    //});
+        $scope.players = [];
+
+        var teams = {};
+
+        angular.forEach(players.data.people, function(player){
+
+            if (player.team == null){
+                teams[player.playId] = undefined;
+            }
+            else
+            {
+                teams[player.playId] = player.team;
+
+            }
+            $scope.players.push(player);
+        });
+
+        $scope.teams = teams;
+
+        $scope.$watchCollection('teams', function(newVal, oldVal){
+            angular.forEach(newVal, function(v, k){
+                if (oldVal[k] != v){
+                    $log.debug(k+" changes to "+v);
+                    MatchFactory.teamUp(k,v).success(function(data){
+
+                    });
+
+                }
+            });
+
+        });
+
+
     $scope.signup_match = function(){
         $log.debug("signup");
     };
@@ -45,6 +86,9 @@ app
             },
             signUp: function(match_id, match_code) {
                 return $http.post('/api/matches/'+match_id+'/signmeup', {code:match_code});
+            },
+            teamUp: function(play_id, team) {
+                return $http.post('/api/play/'+play_id+'/teamup', {team: team});
             }
       }
     })

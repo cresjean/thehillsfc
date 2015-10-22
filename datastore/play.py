@@ -7,15 +7,21 @@ from datastore.match import Match
 class Play(ndb.Model):
     people = ndb.KeyProperty(kind=People)
     match = ndb.KeyProperty(kind=Match)
+    team = ndb.StringProperty()
     signupTime = ndb.DateTimeProperty(auto_now_add=True)
     signinTime = ndb.DateTimeProperty()
-
 
     @classmethod
     def create(cls, peopleId, matchId):
         play = Play()
         play.populate(people=ndb.Key('People', long(peopleId)), match=ndb.Key('Match', long(matchId)))
         return play.put()
+
+
+    @classmethod
+    def getone(cls, id):
+        return Play.get_by_id(long(id))
+
 
     @classmethod
     def getall(cls):

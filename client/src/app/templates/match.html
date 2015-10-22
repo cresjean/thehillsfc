@@ -41,13 +41,13 @@
         </div>
     </div>
     <div class="row">
-
             <div class="col-md-6 col-md-offset-2 highlight">
                     <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
                         <tr>
                             <th>#</th>
+                            <th>Team</th>
                             <th>
                                 Players already signed-up
                             </th>
@@ -57,10 +57,17 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr dir-paginate="player in players | itemsPerPage: 11 ">
+                        <tr dir-paginate="player in players | itemsPerPage: 30 ">
                             <td>{{$index + 1}}</td>
-
-                            <td>{{player.name}} <span class="label label-primary" aria-hidden="true" ng-if="player.admin">C</span></td>
+                            <td><input bs-switch ng-model="teams[player.playId]" type="checkbox"
+                                       data-player-id="player.id"
+                                       switch-size="mini" switch-label-width="0"
+                                       ng-true-value="'red'" ng-false-value="'blue'"
+                                       switch-active="{{storage.currentUser.admin || player.id == storage.currentUser.id}}"
+                                       switch-label-width="0"
+                                       switch-on-text="Red" switch-on-color="danger"
+                                       switch-off-color="primary" switch-off-text="Blue"></td>
+                            <td>{{player.name}} <span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span></td>
                             <td>
                                 <span class="label label-default" aria-hidden="true" ng-if="player.signinTime == 0">not yet</span>
                                 <span class="label label-success" aria-hidden="true" ng-if="player.signinOntime">on time</span>

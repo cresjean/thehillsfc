@@ -9,3 +9,6 @@ class MatchNotExistsError(HTTPException):
 
 class InvalidLoginError(HTTPException):
     pass
+
+class PlayNotExistsError(HTTPException):
+    pass

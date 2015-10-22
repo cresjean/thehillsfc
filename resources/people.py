@@ -54,7 +54,7 @@ class PeopleSignUpResource(Flask_Resource):
         password = args.get('password')
         username = args.get('username')
         name = args.get('name')
-        logging.debug("what's email {}".format(username))
+        logging.debug("sign up {}".format(username))
         people = People.getbyusername(username)
         if people:
             logging.debug("username already taken")
@@ -62,7 +62,14 @@ class PeopleSignUpResource(Flask_Resource):
         else:
             people = People.create(name, username)
             people.get().genpass(password)
-            login_user(User.get(username), remember=True)
+            user = User.get(username)
+            if user is None:
+                user = User.get(username)
+                logging.warning("User get retry")
+            if user is not None:
+                login_user(user, remember=True)
+            else:
+                logging.warning("Still not found")
             return {'id': people.id(), "username": username, "name": name, "admin": False}
 
 

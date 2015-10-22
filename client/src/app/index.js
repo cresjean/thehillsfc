@@ -10,7 +10,8 @@ var app = angular.module('hillfc',
         'angularUtils.directives.dirPagination',
         'ui.bootstrap.datetimepicker',
         'angularMoment',
-        'monospaced.qrcode'
+        'monospaced.qrcode',
+        'frapontillo.bootstrap-switch'
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -146,8 +147,12 @@ app.config(function($stateProvider, $urlRouterProvider){
                 match: function (MatchFactory, $stateParams) {
                     return MatchFactory.getMatch($stateParams.matchId);
                 },
-                isIn: function (MatchFactory, $stateParams,$rootScope) {
+                isIn: function (MatchFactory, $stateParams, $rootScope) {
                     return MatchFactory.getPlayer($stateParams.matchId, $rootScope.storage.currentUser.id)
+                },
+                players: function(MatchFactory, $stateParams){
+                    return MatchFactory.getPlayers($stateParams.matchId)
+
                 }
             }
 

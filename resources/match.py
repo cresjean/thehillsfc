@@ -96,9 +96,11 @@ class MatchPlayers(Resource):
                 registered_people.append({
                     "name": player.name,
                     "id": player.key.id(),
+                    "playId": play.key.id(),
                     "signupTime": play.signupTime,
                     "signinTime": play.signinTime,
                     "admin": player.admin,
+                    "team": play.team or None,
                     "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })
