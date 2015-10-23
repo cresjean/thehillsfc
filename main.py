@@ -2,7 +2,7 @@ import logging
 from flask import Flask
 from flask import redirect
 from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp, MatchLeave
-from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource, MeResource
+from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
@@ -30,6 +30,10 @@ custom_errors = {
     'PlayNotExistsError': {
         'message': "The play ID does not exist",
         'status': 404,
+    },
+    'PeopleNotExistsError': {
+        'message': "The username/email does not exist",
+        'status': 404,
     }
 }
 
@@ -51,6 +55,7 @@ api.add_resource(MatchPlayerIn, '/api/matches/<match_id>/<people_id>')
 api.add_resource(PeopleLoginResource, '/api/people/login')
 api.add_resource(PeopleLogoutResource, '/api/people/logout')
 api.add_resource(PeopleSignUpResource, '/api/people/signup')
+api.add_resource(PeoplePasswordResource, '/api/people/password-reset')
 
 @login_manager.unauthorized_handler
 def unauthorized():

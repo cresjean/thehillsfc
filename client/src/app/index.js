@@ -101,6 +101,14 @@ app.config(function($stateProvider, $urlRouterProvider){
                 requireLogin: false
             }
         })
+        .state('password-reset', {
+            url: '^/password-reset',
+            templateUrl: 'app/templates/password-reset.html',
+            controller: 'PasswordResetCtrl',
+            data: {
+                requireLogin: false
+            }
+        })
         .state('signup', {
             url: '^/signup',
             templateUrl: 'app/templates/signup.html',

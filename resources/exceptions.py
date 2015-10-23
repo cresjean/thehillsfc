@@ -12,3 +12,6 @@ class InvalidLoginError(HTTPException):
 
 class PlayNotExistsError(HTTPException):
     pass
+
+class PeopleNotExistsError(HTTPException):
+    pass

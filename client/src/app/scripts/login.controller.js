@@ -44,11 +44,33 @@ app.controller('LoginCtrl', function ($scope, $log, $state, $rootScope, LoginFac
         });
 
     })
+    .controller('PasswordResetCtrl', function($scope, $log, $rootScope, $localStorage, LoginFactory, $state){
+        $log.debug('PasswordResetCtrl');
+        $scope.login = {};
+        $scope.reset = function(){
+             $scope.login = {};
+            LoginFactory.resetPassword($scope.password, $scope.email).then(function () {
+                    $scope.login.success = true;
+                    $scope.login.message = "Please use your new password to login";
+
+               $state.go('login');
+            },
+            function(){
+                $scope.login.error = true;
+                $scope.login.message = "Email does not exist";
+            });
+        };
+
+
+    })
     .factory('LoginFactory', function ($http){
         var loginStatus = true;
         var user;
 
         return {
+            resetPassword: function(pwd, email){
+                return $http.post('/api/people/password-reset',{password: pwd, email:email});
+            },
             isLogin: function(){
                 return $http.get('/api/people/login');
             },

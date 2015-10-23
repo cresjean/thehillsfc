@@ -6,7 +6,7 @@ import logging
 from login import *
 from resource_fields import *
 from datastore.people import People
-from exceptions import UserAlreadyExistsError, InvalidLoginError
+from exceptions import UserAlreadyExistsError, InvalidLoginError, PeopleNotExistsError
 from auth import Resource
 from login import User
 from flask.ext.login import current_user
@@ -19,6 +19,10 @@ parser.add_argument("position", type=str, location='json')
 parser.add_argument("wechatId", type=str, location='json')
 parser.add_argument("username", type=str, location='json')
 parser.add_argument("password", type=str, location='json')
+
+password_parser = reqparse.RequestParser()
+password_parser.add_argument("email", type=str, location='json')
+password_parser.add_argument("password", type=str, location='json')
 
 update_parser = reqparse.RequestParser()
 update_parser.add_argument("name", location='json')
@@ -76,6 +80,18 @@ class PeopleSignUpResource(Flask_Resource):
     def get(self):
         args = parser.parse_args()
 
+class PeoplePasswordResource(Flask_Resource):
+
+    def post(self):
+        args = password_parser.parse_args()
+        password = args.get('password')
+        username = args.get('email')
+        people = People.getbyusername(username)
+        if people:
+            people.genpass(password)
+        else:
+            raise PeopleNotExistsError
+        return True
 
 class PeopleLogoutResource(Flask_Resource):
 
