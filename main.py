@@ -1,7 +1,7 @@
 import logging
 from flask import Flask
 from flask import redirect
-from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp
+from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp, MatchLeave
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource, MeResource
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
@@ -36,12 +36,14 @@ custom_errors = {
 api = Api(app, errors=custom_errors)
 api.add_resource(MatchesResource, '/api/matches')
 api.add_resource(MatchSignUp, '/api/matches/<match_id>/signmeup')
+api.add_resource(MatchLeave, '/api/matches/<match_id>/leave')
 api.add_resource(MatchResource, '/api/matches/<match_id>')
 api.add_resource(PeoplesResource, '/api/people')
 api.add_resource(MeResource, '/api/people/me')
 api.add_resource(PeopleResource, '/api/people/<people_id>')
 api.add_resource(PlayResource, '/api/play')
 api.add_resource(PlayTeamResource, '/api/play/<play_id>/teamup')
+
 api.add_resource(MatchPlayers, '/api/matches/<match_id>/registered-people')
 api.add_resource(PlayMatchResource, '/api/matches/<match_id>/plays')
 api.add_resource(MatchPlayerIn, '/api/matches/<match_id>/<people_id>')

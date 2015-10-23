@@ -4,56 +4,64 @@
 'use strict';
 
 app
-    .controller('MatchCtrl', function ($scope, $log, MatchFactory, $stateParams, match, isIn, players) {
+    .controller('MatchCtrl', function ($scope, $log, MatchFactory, $stateParams, match, isIn, players,$state, $rootScope) {
     $log.debug("Match Ctrl");
     $scope.match = match.data.match;
     $scope.alreadyIn = isIn.data.in;
-    //$scope.players = players.data.people;
-    //MatchFactory.getPlayers($stateParams.matchId).success(function(data){
-    //    $scope.players = data.people;
-    //    var teams = {};
-    //    angular.forEach($scope.players, function(player){
-    //        teams[player.id] = player.team;
-    //
-    //    });
-    //    $scope.teams = teams;
-    //
-    //});
-        $scope.players = [];
+    $scope.leave = false;
+    $scope.players = [];
 
-        var teams = {};
+    var teams = {};
 
-        angular.forEach(players.data.people, function(player){
+    angular.forEach(players.data.people, function(player){
 
-            if (player.team == null){
-                teams[player.playId] = undefined;
+        if (player.team == null){
+            teams[player.playId] = undefined;
+        }
+        else
+        {
+            teams[player.playId] = player.team;
+        }
+        if (player.id == $rootScope.storage.currentUser.id){
+            $scope.leave = player.leave;
+        }
+        $scope.players.push(player);
+    });
+
+    $scope.teams = teams;
+
+    $scope.$watchCollection('teams', function(newVal, oldVal){
+        angular.forEach(newVal, function(v, k){
+            if (oldVal[k] != v){
+                MatchFactory.teamUp(k,v).success(function(data){
+
+                });
+
             }
-            else
-            {
-                teams[player.playId] = player.team;
-
-            }
-            $scope.players.push(player);
         });
 
-        $scope.teams = teams;
+    });
 
-        $scope.$watchCollection('teams', function(newVal, oldVal){
-            angular.forEach(newVal, function(v, k){
-                if (oldVal[k] != v){
-                    $log.debug(k+" changes to "+v);
-                    MatchFactory.teamUp(k,v).success(function(data){
 
-                    });
+    $scope.askLeave = function(){
+        $log.debug("ask leave");
+        MatchFactory.askLeave( $scope.match.id, !$scope.leave).then(function(){
+            $log.debug("leave");
 
+            $scope.leave = !$scope.leave;
+            var not_existing = true;
+            angular.forEach($scope.players, function(player){
+                if (player.id == $rootScope.storage.currentUser.id){
+                    player.leave = $scope.leave ;
+                    not_existing = false;
                 }
             });
+            if (not_existing){
+                $log.debug("reload");
+                $state.reload();
+            }
 
         });
-
-
-    $scope.signup_match = function(){
-        $log.debug("signup");
     };
 
 })
@@ -89,6 +97,9 @@ app
             },
             teamUp: function(play_id, team) {
                 return $http.post('/api/play/'+play_id+'/teamup', {team: team});
+            },
+            askLeave: function(match_id, status){
+                return $http.post('/api/matches/'+match_id+'/leave', {status:status});
             }
       }
     })

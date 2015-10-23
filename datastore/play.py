@@ -8,13 +8,15 @@ class Play(ndb.Model):
     people = ndb.KeyProperty(kind=People)
     match = ndb.KeyProperty(kind=Match)
     team = ndb.StringProperty()
+    leave = ndb.BooleanProperty(default=False)
+    score = ndb.FloatProperty(default=6)
     signupTime = ndb.DateTimeProperty(auto_now_add=True)
     signinTime = ndb.DateTimeProperty()
 
     @classmethod
-    def create(cls, peopleId, matchId):
+    def create(cls, peopleId, matchId, leave=False):
         play = Play()
-        play.populate(people=ndb.Key('People', long(peopleId)), match=ndb.Key('Match', long(matchId)))
+        play.populate(people=ndb.Key('People', long(peopleId)), match=ndb.Key('Match', long(matchId)), leave=leave)
         return play.put()
 
 

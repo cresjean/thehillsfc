@@ -3,7 +3,7 @@
 	<!-- Main Form -->
 	<div class="login-form-1">
 		<form id="login-form" class="text-left">
-			<div class="login-form-main-message"></div>
+			<div ng-class="{'success': login.success, 'error': login.error}" class="login-form-main-message show" ng-show="login.message">{{login.message}}</div>
 			<div class="main-login-form">
 				<div class="login-group">
 					<div class="form-group">
@@ -15,7 +15,7 @@
 						<input ng-model="password" type="password" class="form-control" id="lg_password" name="lg_password" placeholder="password">
 					</div>
 				</div>
-				<button type="submit" class="login-button" ng-click="go_login()" ng-disabled="!username || !password"><i class="fa fa-chevron-right"></i></button>
+				<button type="submit" class="login-button" ng-click="go_login()" ng-disabled="!username || !password"><i ng-class="{'fa-spinner fa-pulse':login.checking, 'fa-check': login.success, 'fa-remove': login.error}" class="fa fa-chevron-right"></i></button>
 			</div>
 			<div class="etc-login-form">
 				<!--<p>forgot your password? <a href="#">click here</a></p>-->

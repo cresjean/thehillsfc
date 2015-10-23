@@ -35,6 +35,14 @@
                     <div class="col-md-6 col-md-offset-4">
                         <button ng-if="alreadyIn" disabled="disabled" type="button" class="btn btn-success">You have already signed up</button>
                         <button ng-if="!alreadyIn" type="button" class="btn btn-success" ui-sref="match-signup({matchId:match.id, matchCode: match.signupCode})">Sign Up</button>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6 col-md-offset-4">
+                        <button ng-show="!leave" type="button" class="btn btn-warning" ng-click="askLeave()" >Ask for leave</button>
+                        <button ng-show="leave" type="button" class="btn btn-info" ng-click="askLeave()" >Back in game</button>
+
                     </div>
                 </div>
             </form>
@@ -67,7 +75,8 @@
                                        switch-label-width="0"
                                        switch-on-text="Red" switch-on-color="danger"
                                        switch-off-color="primary" switch-off-text="Blue"></td>
-                            <td>{{player.name}} <span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span></td>
+                            <td>
+                                <span ng-if="player.id == storage.currentUser.id" class="glyphicon glyphicon-user" aria-hidden="true"></span>{{player.name}}<span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span> <span class="label label-default" aria-hidden="true" ng-if="player.leave">leave</span> </td>
                             <td>
                                 <span class="label label-default" aria-hidden="true" ng-if="player.signinTime == 0">not yet</span>
                                 <span class="label label-success" aria-hidden="true" ng-if="player.signinOntime">on time</span>

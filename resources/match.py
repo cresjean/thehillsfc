@@ -49,6 +49,22 @@ signup_parser = reqparse.RequestParser()
 signup_parser.add_argument("code", type=str, location='json', required=True,
                     help="Code cannot be blank")
 
+leave_parser = reqparse.RequestParser()
+
+leave_parser.add_argument("status", type=bool, location='json', required=True,
+                    help="Leave status must be set")
+
+
+class MatchLeave(Resource):
+
+   def post(self, match_id):
+       logging.debug("ask for leave")
+       args = leave_parser.parse_args()
+
+       status = args.get('status')
+       MatchHelper.askforleave(match_id, status)
+       return {"leave_status": status}
+
 
 class MatchSignUp(Resource):
 
@@ -101,6 +117,7 @@ class MatchPlayers(Resource):
                     "signinTime": play.signinTime,
                     "admin": player.admin,
                     "team": play.team or None,
+                    "leave": play.leave,
                     "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })
@@ -208,6 +225,24 @@ class MatchHelper():
 
             return {"status": True}
         return {"status": False}
+
+
+    @classmethod
+    def askforleave(cls, match_id, status):
+        match = Match.getone(match_id)
+        people = People.getone(current_user.key_id)
+        if people and people.key in match.registerdPeople:
+            logging.debug("You have already signed up! Now switch leave")
+            play = Play.getbyMatchPeople(match_id, current_user.key_id)
+            if play:
+                play.leave = status
+                play.put()
+        elif people and people.key:
+            match.signup(current_user.key_id)
+            Play.create(current_user.key_id, match_id, leave=status)
+        memcache.flush_all()
+
+        return True
 
     @classmethod
     def signup(cls, match_id, code):
