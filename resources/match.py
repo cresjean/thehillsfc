@@ -141,12 +141,6 @@ class MatchResource(Resource):
             match_dict['signupLink'] = "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode)
             match_dict['signupCode'] = match.signupCode
 
-            # match.__setattr__('id', match_id)
-            #
-            # match.__setattr__('signinLink', "http://{}/match-signin/{}/{}".format(host_url, match_id, match.signinCode))
-            # match.__setattr__('signupLink', "http://{}/match-signup/{}/{}".format(host_url, match_id, match.signupCode))
-            # match.__setattr__('signupCode', match.signupCode)
-
             memcache.set(match_id, match_dict, namespace="match")
         else:
             logging.debug("get match info from memcache {}")

@@ -57,7 +57,8 @@ match_field = {
     "signinLink": fields.String,
     "signupLink": fields.String,
     "signupCode": fields.String,
-    "nosignups": fields.Integer
+    "nosignups": fields.Integer,
+    "noleaves": fields.Integer
 }
 
 match_resource_fields = {
