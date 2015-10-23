@@ -25,12 +25,12 @@ class People(ndb.Model):
     @classmethod
     def create(cls, name, username):
         people = People()
-        people.populate(name=name, username=username)
+        people.populate(name=name, username=username.lower())
         return people.put()
 
     @classmethod
     def getbyusername(cls, username):
-        q = cls.query(cls.username == username)
+        q = cls.query(cls.username == username.lower())
         return q.get()
 
 
