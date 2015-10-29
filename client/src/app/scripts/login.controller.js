@@ -4,11 +4,12 @@
 
 'use strict';
 
-app.controller('LoginCtrl', function ($scope, $log, $state, $rootScope, LoginFactory, $localStorage){
+app.controller('LoginCtrl', function ($scope, $log, $state, $rootScope, LoginFactory, $localStorage, $stateParams, $location){
     $log.debug('Login Ctrl');
     $scope.login = {};
     $scope.LoginFactory = LoginFactory;
     $scope.LoginFactory.setLoginStatus(false);
+    var next = $stateParams.next;
     $scope.go_login = function(){
 
         var username = $scope.username;
@@ -23,7 +24,13 @@ app.controller('LoginCtrl', function ($scope, $log, $state, $rootScope, LoginFac
             $rootScope.storage = $localStorage;
             $rootScope.storage.currentUser = data.data;
 
-            $state.go("home");
+                if (next !== undefined){
+                    $log.debug("redirect to " + next);
+                    $location.path(next);
+                }
+                else{
+                    $state.go("home");
+                }
         },
         function(data){
             $scope.login.checking = false;

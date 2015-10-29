@@ -30,7 +30,8 @@ match_people_field = {
     "signinOntime": fields.Boolean,
     "admin": fields.Boolean,
     "team": fields.String,
-    "leave": fields.Boolean
+    "leave": fields.Boolean,
+    "signupMissing": fields.Boolean
 }
 
 match_people_resource = {

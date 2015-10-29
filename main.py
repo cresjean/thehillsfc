@@ -1,12 +1,12 @@
 import logging
 from flask import Flask
-from flask import redirect
+from flask import redirect, request
 from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp, MatchLeave
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
-
+from appengine_config import host_url
 from resources.login import login_manager
 app = Flask(__name__)
 app.config['DEBUG'] = True
@@ -59,7 +59,9 @@ api.add_resource(PeoplePasswordResource, '/api/people/password-reset')
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    return redirect('/')
+    logging.debug("unauthorized and next={}".format(request.path))
+
+    return redirect('/#/login?next={}{}'.format(host_url,request.path))
 
 @app.route('/logout')
 @login_required

@@ -5,11 +5,21 @@
 
 app
     .controller('MatchCtrl', function ($scope, $log, MatchFactory, $stateParams, match, isIn, players,$state, $rootScope) {
-    $log.debug("Match Ctrl");
-    $scope.match = match.data.match;
-    $scope.alreadyIn = isIn.data.in;
-    $scope.leave = false;
-    $scope.players = [];
+        $log.debug("Match Ctrl");
+        $scope.match = match.data.match;
+        $scope.alreadyIn = isIn.data.in;
+        $scope.leave = false;
+        $scope.players = [];
+        var now = new Date();
+        var latestSignup =  new Date($scope.match.startTime*1000);
+        latestSignup.setHours(latestSignup.getHours() - 20);
+        $log.debug(latestSignup);
+
+        $scope.signupOpen = true;
+            if (now > latestSignup)
+            {
+                 $scope.signupOpen = false;
+            }
 
     var teams = {};
 

@@ -118,6 +118,7 @@ class MatchPlayers(Resource):
                     "admin": player.admin,
                     "team": play.team or None,
                     "leave": play.leave,
+                    "signupMissing" :play.signupMissing,
                     "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })
@@ -196,11 +197,26 @@ class MatchHelper():
     @classmethod
     def signin(cls, match_id, code):
         match = Match.getone(match_id)
+
         if datetime.now() < match.signinEarliest:
             logging.debug("You are too early for sign in")
             return {"status": False, "reason": "You are too early for sign in", "code": -1}
         if datetime.now() > match.signinLatest:
             logging.debug("You are too late for sign in")
+            logging.debug("Sign in user {}".format(current_user.key_id))
+            match.signin(current_user.key_id)
+
+            play = Play.getbyMatchPeople(match_id, current_user.key_id)
+
+            if play is None:
+                logging.debug("this guy didn't sign up, but is sign-in now")
+                match.signup(current_user.key_id)
+                Play.create(current_user.key_id, match_id, missing=True)
+            else:
+                play.signinTime = datetime.now()
+                play.put()
+            memcache.flush_all()
+
             return {"status": False, "reason": "You are too late for sign in", "code": 1}
 
         people = People.getone(current_user.key_id)
@@ -212,10 +228,16 @@ class MatchHelper():
             logging.debug("Sign in user {}".format(current_user.key_id))
             match.signin(current_user.key_id)
             play = Play.getbyMatchPeople(match_id, current_user.key_id)
-            play.signinTime = datetime.now()
-            play.put()
-            memcache.flush_all()
 
+            if play is None:
+                logging.debug("this guy didn't sign up, but is sign-in now")
+                match.signup(current_user.key_id)
+                Play.create(current_user.key_id, match_id, missing=True)
+            else:
+                play.signinTime = datetime.now()
+                play.put()
+
+            memcache.flush_all()
 
             return {"status": True}
         return {"status": False}

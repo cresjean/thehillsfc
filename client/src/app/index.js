@@ -94,7 +94,7 @@ app.config(function($stateProvider, $urlRouterProvider){
             }
         })
         .state('login', {
-            url: '^/login',
+            url: '^/login?next',
             templateUrl: 'app/templates/login.html',
             controller: 'LoginCtrl',
             data: {

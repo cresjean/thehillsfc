@@ -35,6 +35,7 @@ class User(UserMixin):
 
 @login_manager.user_loader
 def load_user(username):
+
     return User.get(username)
 
 
