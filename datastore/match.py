@@ -15,13 +15,14 @@ class Match(ndb.Model):
     signinCode = ndb.StringProperty()
     registerdPeople = ndb.KeyProperty(kind=People, repeated=True)
     participatedPeople = ndb.KeyProperty(kind=People, repeated=True)
+    status = ndb.StringProperty()
 
     @classmethod
     def create(cls, start, finish, signinEarliest, checkInLatest, location):
         match = Match()
         match.populate(location=location, startTime=start, finishTime=finish,
                        signinLatest=checkInLatest, signinEarliest=signinEarliest,
-                       signupCode=cls.code_generator(), signinCode=cls.code_generator())
+                       signupCode=cls.code_generator(), signinCode=cls.code_generator(), status='OPEN')
         return match.put()
 
     @classmethod

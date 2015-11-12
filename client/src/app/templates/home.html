@@ -1,40 +1,53 @@
 <div ng-include="'app/components/navbar/navbar.html'"></div>
-<div class="row home-container">
-    <div class="col-md-12">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4>Games</h4>
-            </div>
-            <div class="panel-body">
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>
-                                开始时间
-                            </th>
-                            <th>
-                                报名人数
-                            </th>
-                            <th>
-                                签到时间
-                            </th>
-                            <th>
-                                地点
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 " >
-                            <td><a ui-sref="match({matchId:match.id})"> {{match.startTime | amCalendar}}</a></td>
-                            <td>{{match.nosignups}}</td>
-                            <td>{{match.signinEarliest | amDateFormat:'hh:mm a' }} - {{match.signinLatest | amDateFormat:'hh:mm a'  }}</td>
-                            <td>{{match.location}}</td>
-                        </tr>
-                        </tbody>
+<div class="home-container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default plain profile-panel">
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="user-name">
+                                    {{storage.currentUser.name}}<span class="label label-primary">{{storage.currentUser.position || "打酱油的"}}</span>
+                            </div>
+                            <div class="user-name">
+                                <span class="label label-info " aria-hidden="true">报名{{stat.signup}} | 请假{{stat.leave}}</span>
+                                <span class="label label-success " aria-hidden="true">准时{{stat.ontime}}</span>
+                                <span class="label label-warning " aria-hidden="true">迟到{{stat.late}} | 打酱油{{stat.vistor}}</span>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>
+                                    开始时间
+                                </th>
+                                <th>
+                                    报名人数
+                                </th>
+                                <th>
+                                    签到时间
+                                </th>
+                                <th>
+                                    地点
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr dir-paginate="match in matches | orderBy: 'startTime':true | itemsPerPage: 5 " >
+                                <td><a ui-sref="match({matchId:match.id})"> {{match.startTime | amCalendar}}</a></td>
+                                <td>{{match.nosignups}}</td>
+                                <td>{{match.signinEarliest | amDateFormat:'hh:mm a' }} - {{match.signinLatest | amDateFormat:'hh:mm a'  }}</td>
+                                <td>{{match.location}}</td>
+                            </tr>
+                            </tbody>
 
-                    </table>
-                    <dir-pagination-controls></dir-pagination-controls>
+                        </table>
+                        <dir-pagination-controls></dir-pagination-controls>
+                    </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

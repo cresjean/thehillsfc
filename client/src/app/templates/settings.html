@@ -10,6 +10,19 @@
                     <div class="col-md-6"><input class="form-control" data-ng-model="me.name" value="{{me.name}}"></div>
                 </div>
                 <div class="form-group">
+                    <label class="col-md-4  match-label">Position</label>
+                    <div class="col-md-6">
+                        <ui-select ng-model="me.position">
+                            <ui-select-match>
+                                <span ng-bind="$select.selected.name"></span>
+                            </ui-select-match>
+                            <ui-select-choices repeat="position in (positions | filter: $select.search) track by position.id">
+                                <span ng-bind="position.name"></span>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="col-md-4  match-label">Password</label>
 
                     <div class="col-md-6"><input type="password" class="form-control" data-ng-model="me.password" value="{{me.password}}"></div>

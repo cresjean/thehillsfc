@@ -11,7 +11,8 @@ var app = angular.module('hillfc',
         'ui.bootstrap.datetimepicker',
         'angularMoment',
         'monospaced.qrcode',
-        'frapontillo.bootstrap-switch'
+        'frapontillo.bootstrap-switch',
+        'ui.select'
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider){
@@ -179,7 +180,6 @@ app.config(function($stateProvider, $urlRouterProvider){
             var requireLogin = toState.data.requireLogin;
             var requireAdmin = toState.data.requireAdmin;
 
-            $log.debug("require admin? " + requireAdmin + " curr "+ $rootScope.storage.currentUser);
             if (requireLogin && typeof $rootScope.storage.currentUser === 'undefined') {
                 event.preventDefault();
                 $state.go('login');

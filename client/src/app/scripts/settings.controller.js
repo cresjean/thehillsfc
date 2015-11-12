@@ -7,10 +7,26 @@ app
 
         $log.debug("Settings Ctrl");
         $scope.me = me.data;
+         $scope.positions = [
+            {name:'GK', id:'GK'},
+            {name:'CB', id:'CB'},
+            {name:'RB', id:'RB'},
+            {name:'LB', id:'LB'},
+            {name:'LWB', id:'LWB'},
+            {name:'RWB', id:'RWB'},
+            {name:'DM', id:'DM'},
+            {name:'CM', id:'CM'},
+            {name:'AM', id:'AM'},
+            {name:'CF', id:'CF'},
+            {name:'Coach', id:'Coach'}
+
+        ];
+        $scope.me.position = {name: $scope.me.position, id: $scope.me.position};
         $scope.updateMe = function(){
-            $log.debug("update me");
-            SettingsFactory.updateMe({"name": $scope.me.name, "password": $scope.me.password}).success(function(data){
-                $state.go('settings');
+
+            SettingsFactory.updateMe({name: $scope.me.name, password: $scope.me.password, position: $scope.me.position.id}).success(function(data){
+                $rootScope.storage.currentUser.position = $scope.me.position.id;
+                $state.go('home');
             });
         }
 })

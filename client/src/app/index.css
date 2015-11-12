@@ -13,14 +13,6 @@ a {
   text-decoration: none;
 }
 
-.container {
-  width: 1170px;
-  margin-right: auto;
-  margin-left: auto;
-  padding-left: 15px;
-  padding-right: 15px;
-}
-
 .navbar {
   position: relative;
   min-height: 50px;
@@ -114,4 +106,9 @@ a {
 
 hr {
   clear: both;
+}
+
+.glyphicon-spin {
+  -webkit-animation: spin 500ms infinite linear;
+  animation: spin 500ms infinite linear;
 }

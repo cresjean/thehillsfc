@@ -6,6 +6,7 @@ import logging
 from login import *
 from resource_fields import *
 from datastore.people import People
+from datastore.play import Play
 from exceptions import UserAlreadyExistsError, InvalidLoginError, PeopleNotExistsError
 from auth import Resource
 from login import User
@@ -13,6 +14,7 @@ from flask.ext.login import current_user
 
 parser = reqparse.RequestParser()
 
+position = ['GK', 'LB', 'CB', 'RB', 'LWB', 'RWB', 'DM', 'CM', 'AM', 'LW', 'RW', 'CF', 'Coach']
 
 parser.add_argument("name", location='json')
 parser.add_argument("position", type=str, location='json')
@@ -27,6 +29,34 @@ password_parser.add_argument("password", type=str, location='json')
 update_parser = reqparse.RequestParser()
 update_parser.add_argument("name", location='json')
 update_parser.add_argument("password", location='json')
+update_parser.add_argument("position", location='json')
+
+
+class MeStat(Resource):
+
+    def get(self):
+        plays = Play.getbyPeople(current_user.key_id)
+        leaves = 0
+        signups = 0
+        ontime = 0
+        late = 0
+        vistors = 0
+        for play in plays:
+            match = play.match.get()
+            if match.status is not None:
+                if play.leave:
+                    leaves = leaves + 1
+                else:
+                    signups = signups + 1
+                if play.isOntime():
+                    ontime = ontime + 1
+                if not play.leave and play.isLate():
+                    late = late + 1
+                if play.signupMissing:
+                    vistors = vistors + 1
+
+        return {"leave": leaves, "signup": signups, "ontime":ontime, "late": late, "vistor": vistors}
+
 
 class MeResource(Resource):
 
@@ -40,10 +70,13 @@ class MeResource(Resource):
         args = update_parser.parse_args()
         name = args.get('name')
         password = args.get('password')
+        position = args.get('position')
+
         logging.debug("update name {} and password {}".format(name.encode('utf-8'), password))
         if name:
             me = People.getone(current_user.key_id)
             me.name = name
+            me.position = position
             if password != 'itissecret':
                 me.genpass(password)
             me.put()
@@ -123,7 +156,7 @@ class PeopleLoginResource(Flask_Resource):
         if not login_status:
             raise InvalidLoginError
 
-        return {"username": username, "name": people.name, "admin": people.admin, "id": people.key.id()}
+        return {"username": username, "name": people.name, "position": people.position,"admin": people.admin, "id": people.key.id()}
 
 
 class PeopleResource(Resource):

@@ -12,7 +12,7 @@ app
         $scope.players = [];
         var now = new Date();
         var latestSignup =  new Date($scope.match.startTime*1000);
-        latestSignup.setHours(latestSignup.getHours() - 20);
+        latestSignup.setHours(latestSignup.getHours() - 6);
         $log.debug(latestSignup);
 
         $scope.signupOpen = true;

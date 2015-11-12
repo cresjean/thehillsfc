@@ -118,7 +118,7 @@ class MatchPlayers(Resource):
                     "admin": player.admin,
                     "team": play.team or None,
                     "leave": play.leave,
-                    "signupMissing" :play.signupMissing,
+                    "signupMissing": play.signupMissing,
                     "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })

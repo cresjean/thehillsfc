@@ -57,6 +57,3 @@ class People(ndb.Model):
             return True
         else:
             return False
-
-
-

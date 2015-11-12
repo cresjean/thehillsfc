@@ -57,7 +57,6 @@
                         <thead>
                         <tr>
                             <th>#</th>
-                            <th>Team</th>
                             <th>
                                 报名
                             </th>
@@ -69,21 +68,23 @@
                         <tbody>
                         <tr dir-paginate="player in players | itemsPerPage: 30 ">
                             <td>{{$index + 1}}</td>
-                            <td><input bs-switch ng-model="teams[player.playId]" type="checkbox"
-                                       data-player-id="player.id"
-                                       switch-size="mini" switch-label-width="0"
-                                       ng-true-value="'red'" ng-false-value="'blue'"
-                                       switch-active="{{storage.currentUser.admin || player.id == storage.currentUser.id}}"
-                                       switch-label-width="0"
-                                       switch-on-text="Red" switch-on-color="danger"
-                                       switch-off-color="primary" switch-off-text="Blue"></td>
+                            <!--<td><input bs-switch ng-model="teams[player.playId]" type="checkbox"-->
+                                       <!--data-player-id="player.id"-->
+                                       <!--switch-size="mini" switch-label-width="0"-->
+                                       <!--ng-true-value="'red'" ng-false-value="'blue'"-->
+                                       <!--switch-active="{{storage.currentUser.admin || player.id == storage.currentUser.id}}"-->
+                                       <!--switch-label-width="0"-->
+                                       <!--switch-on-text="Red" switch-on-color="danger"-->
+                                       <!--switch-off-color="primary" switch-off-text="Blue"></td>-->
                             <td>
-                                <span ng-if="player.id == storage.currentUser.id" class="glyphicon glyphicon-user" aria-hidden="true"></span>{{player.name}}<span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span> <span class="label label-default" aria-hidden="true" ng-if="player.leave">请假</span> </td>
+                                <span ng-if="player.id == storage.currentUser.id" class="glyphicon glyphicon-user" aria-hidden="true"></span>{{player.name}}<span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span> <span class="label label-default" aria-hidden="true" ng-if="player.leave">请假</span>
+                            </td>
+
                             <td>
                                 <span class="label label-default" aria-hidden="true" ng-if="player.signinTime == 0 && !player.signupMissing">啥也没干</span>
                                 <span class="label label-success" aria-hidden="true" ng-if="player.signinOntime && !player.signupMissing">准时</span>
                                 <span class="label label-warning" aria-hidden="true" ng-if="player.signinLate && !player.signupMissing">迟到</span>
-                                <span class="label label-default" aria-hidden="true" ng-if="player.signupMissing">没报名就来了</span>
+                                <span class="label label-default" aria-hidden="true" ng-if="player.signupMissing">访客</span>
                             </td>
                         </tr>
                         <tr ng-if="!players.length"><td colspan="2">还没有人报名哦</td></tr>

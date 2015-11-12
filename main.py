@@ -2,7 +2,7 @@ import logging
 from flask import Flask
 from flask import redirect, request
 from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp, MatchLeave
-from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource
+from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource,MeStat
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
 from flask.ext.login import login_required, logout_user
@@ -44,6 +44,7 @@ api.add_resource(MatchLeave, '/api/matches/<match_id>/leave')
 api.add_resource(MatchResource, '/api/matches/<match_id>')
 api.add_resource(PeoplesResource, '/api/people')
 api.add_resource(MeResource, '/api/people/me')
+api.add_resource(MeStat, '/api/people/me/stat')
 api.add_resource(PeopleResource, '/api/people/<people_id>')
 api.add_resource(PlayResource, '/api/play')
 api.add_resource(PlayTeamResource, '/api/play/<play_id>/teamup')

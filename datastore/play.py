@@ -2,7 +2,7 @@ __author__ = 'crespowang'
 from google.appengine.ext import ndb
 from datastore.people import People
 from datastore.match import Match
-
+from datetime import datetime
 
 class Play(ndb.Model):
     people = ndb.KeyProperty(kind=People)
@@ -32,6 +32,10 @@ class Play(ndb.Model):
         return q.fetch()
 
     @classmethod
+    def getbyPeople(cls, peopleId):
+        return cls.query(cls.people == ndb.Key('People', long(peopleId))).fetch()
+
+    @classmethod
     def getbyMatchPeople(cls, matchId, peopleId):
         return cls.query(cls.match == ndb.Key('Match', long(matchId)),
                          cls.people == ndb.Key("People", long(peopleId))).get()
@@ -40,3 +44,16 @@ class Play(ndb.Model):
     def getbyMatch(cls, matchId):
         return cls.query(cls.match == ndb.Key('Match', long(matchId))).fetch()
 
+    def isOntime(self):
+        match = self.match.get()
+        return True if self.signinTime and self.signinTime < match.signinLatest else False
+
+    def isLate(self):
+        match = self.match.get()
+        if self.signinTime and self.signinTime > match.signinLatest:
+            return True
+        import logging
+        logging.debug("{} {} {}".format(self.signinTime, datetime.now(), match.signinLatest))
+        if self.signinTime is None and datetime.now() > match.signinLatest:
+            return True
+        return False
