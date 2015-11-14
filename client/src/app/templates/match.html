@@ -40,7 +40,13 @@
                         <button ng-if="!signupOpen" disabled="disabled" type="button" class="btn btn-default">报名和请假时间已经过啦</button>
                     </div>
                 </div>
-                <div class="form-group">
+                                <div class="form-group" ng-if="storage.currentUser.admin">
+                    <div class="col-md-6 col-md-offset-4">
+                        <button ng-show="match.status == 'OPEN'" type="button" class="btn btn-warning" ng-click="cancelMatch()" >Cancel</button>
+                        <button ng-show="match.status == 'CANCELLED'" type="button" class="btn btn-warning" ng-click="openMatch()" >Open</button>
+                </div>
+                                    </div>
+                        <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
                         <button ng-show="!leave && signupOpen" type="button" class="btn btn-warning" ng-click="askLeave()" >请假</button>
                         <button ng-show="leave && signupOpen" type="button" class="btn btn-info" ng-click="askLeave()" >重新加入</button>

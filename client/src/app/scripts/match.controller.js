@@ -52,10 +52,22 @@ app
 
     });
 
+    $scope.cancelMatch = function(){
+        MatchFactory.cancelMatch($scope.match.id).then(function(){
+            $state.go('home');
+
+        });
+    };
+        $scope.openMatch = function(){
+        MatchFactory.openMatch($scope.match.id).then(function(){
+            $state.go('home');
+
+        });
+    };
 
     $scope.askLeave = function(){
         $log.debug("ask leave");
-        MatchFactory.askLeave( $scope.match.id, !$scope.leave).then(function(){
+        MatchFactory.askLeave($scope.match.id, !$scope.leave).then(function(){
             $log.debug("leave");
 
             $scope.leave = !$scope.leave;
@@ -110,6 +122,12 @@ app
             },
             askLeave: function(match_id, status){
                 return $http.post('/api/matches/'+match_id+'/leave', {status:status});
+            },
+            cancelMatch: function(match_id) {
+                return $http.post('/api/matches/'+match_id+'/status/cancel');
+            },
+            openMatch: function(match_id) {
+                return $http.post('/api/matches/'+match_id+'/status/open');
             }
       }
     })

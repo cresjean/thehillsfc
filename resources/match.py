@@ -66,6 +66,16 @@ class MatchLeave(Resource):
        return {"leave_status": status}
 
 
+class MatchStatus(Resource):
+
+    def post(self, match_id, status):
+        statusm = {"open": "OPEN", "close": "CLOSED", "cancel": "CANCELLED"}
+        if status in ['open', 'close', 'cancel']:
+            logging.debug("Setting {}".format(status))
+            MatchHelper.status(match_id, statusm.get(status))
+        return {"status": "ok"}
+
+
 class MatchSignUp(Resource):
 
     @marshal_with(match_resource_fields)
@@ -166,7 +176,8 @@ class MatchesResource(Resource):
                     "signinEarliest": match.signinEarliest,
                     "signinLatest": match.signinLatest,
                     "createdTime": match.createdTime,
-                    "nosignups": len(match.registerdPeople)
+                    "nosignups": len(match.registerdPeople),
+                    "status": match.status
                 })
             memcache.set("matches", matches_json)
         else:
@@ -276,3 +287,13 @@ class MatchHelper():
             memcache.flush_all()
             return True
         return False
+
+    @classmethod
+    def status(cls, match_id, status):
+        match = Match.getone(match_id)
+        logging.debug("Set status to {}".format(status))
+        if match:
+            match.status = status
+            match.put()
+            memcache.flush_all()
+        return True
