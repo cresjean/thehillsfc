@@ -53,7 +53,9 @@ class Play(ndb.Model):
         if self.signinTime and self.signinTime > match.signinLatest:
             return True
         import logging
-        logging.debug("{} {} {}".format(self.signinTime, datetime.now(), match.signinLatest))
         if self.signinTime is None and datetime.now() > match.signinLatest:
             return True
+
         return False
+
+

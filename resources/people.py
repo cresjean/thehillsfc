@@ -43,7 +43,7 @@ class MeStat(Resource):
         vistors = 0
         for play in plays:
             match = play.match.get()
-            if match.status is not None:
+            if match.status is not None and match.status == 'OPEN':
                 if play.leave:
                     leaves = leaves + 1
                 else:

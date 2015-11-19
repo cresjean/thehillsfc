@@ -24,7 +24,10 @@
                                     开始时间
                                 </th>
                                 <th>
-                                    报名人数
+                                    报名
+                                </th>
+                                <th>
+                                    请假
                                 </th>
                                 <th>
                                     签到时间
@@ -41,6 +44,7 @@
                                     <span ng-show="match.status == 'CANCELLED'" class="label label-danger " aria-hidden="true">Cancelled</span>
                                 </td>
                                 <td>{{match.nosignups}}</td>
+                                <td>{{match.noleaves}}</td>
                                 <td>{{match.signinEarliest | amDateFormat:'hh:mm a' }} - {{match.signinLatest | amDateFormat:'hh:mm a'  }}</td>
                                 <td>{{match.location}}</td>
                             </tr>

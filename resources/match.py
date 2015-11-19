@@ -168,6 +168,8 @@ class MatchesResource(Resource):
             matches = Match.getall()
             matches_json = []
             for match in matches:
+                plays = Play.getbyMatch(match.key.id())
+                leaves = [play for play in plays if play.leave]
                 matches_json.append({
                     "id": match.key.id(),
                     "location": match.location,
@@ -176,6 +178,7 @@ class MatchesResource(Resource):
                     "signinEarliest": match.signinEarliest,
                     "signinLatest": match.signinLatest,
                     "createdTime": match.createdTime,
+                    "noleaves": len(leaves),
                     "nosignups": len(match.registerdPeople),
                     "status": match.status
                 })
