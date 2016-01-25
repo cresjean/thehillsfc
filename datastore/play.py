@@ -13,6 +13,7 @@ class Play(ndb.Model):
     score = ndb.FloatProperty(default=6)
     signupTime = ndb.DateTimeProperty(auto_now_add=True)
     signinTime = ndb.DateTimeProperty()
+    finePaid = ndb.IntegerProperty(default=0)
 
     @classmethod
     def create(cls, peopleId, matchId, leave=False, missing=False):

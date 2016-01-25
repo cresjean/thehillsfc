@@ -31,7 +31,8 @@ match_people_field = {
     "admin": fields.Boolean,
     "team": fields.String,
     "leave": fields.Boolean,
-    "signupMissing": fields.Boolean
+    "signupMissing": fields.Boolean,
+    "finePaid": fields.Integer
 }
 
 match_people_resource = {
@@ -60,7 +61,8 @@ match_field = {
     "signupCode": fields.String,
     "nosignups": fields.Integer,
     "noleaves": fields.Integer,
-    "status": fields.String
+    "status": fields.String,
+    "comment": fields.String
 }
 
 match_resource_fields = {

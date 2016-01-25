@@ -55,11 +55,37 @@ leave_parser.add_argument("status", type=bool, location='json', required=True,
                     help="Leave status must be set")
 
 
+fine_parser = reqparse.RequestParser()
+fine_parser.add_argument("dollar", type=int, location='json', required=True,
+                    help="Dollar status must be set")
+
+
+comment_parser = reqparse.RequestParser()
+comment_parser.add_argument("comment", type=str, location='json', required=True,
+                    help="comment status must be set")
+
+
+
+class MatchManualFine(Resource):
+    def post(self, match_id, people_id):
+        args = fine_parser.parse_args()
+        dollar = args.get('dollar')
+        return MatchHelper.manualFine(match_id,people_id,dollar)
+
+
+
 class MatchManualSignin(Resource):
 
     def post(self, match_id, people_id):
         return MatchHelper.manualSignin(match_id, people_id)
 
+
+class MatchComment(Resource):
+    def post(self, match_id):
+        args = comment_parser.parse_args()
+
+        comment = args.get('comment')
+        return MatchHelper.comment(match_id, comment)
 
 class MatchLeave(Resource):
 
@@ -136,7 +162,8 @@ class MatchPlayers(Resource):
                     "leave": play.leave,
                     "signupMissing": play.signupMissing,
                     "signinOntime": True if play.signinTime and play.signinTime <= match.signinLatest else False,
-                    "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
+                    "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False,
+                    "finePaid": 0 if play.finePaid is None else play.finePaid
                 })
             memcache.set(match_id, registered_people, namespace="match_players")
         else:
@@ -216,6 +243,14 @@ class MatchHelper():
 
 
     @classmethod
+    def comment(cls, match_id, comment):
+        match = Match.getone(match_id)
+
+        match.comment = comment
+        match.put()
+        return {"status": True}
+
+    @classmethod
     def manualSignin(cls, match_id, people_id):
         match = Match.getone(match_id)
         match.signin(people_id)
@@ -225,6 +260,18 @@ class MatchHelper():
         play.put()
         memcache.flush_all()
         return {"status": True}
+
+
+    @classmethod
+    def manualFine(cls, match_id, people_id, dollar):
+
+        play = Play.getbyMatchPeople(match_id, people_id)
+        play.finePaid = dollar
+        play.put()
+
+        memcache.flush_all()
+        return {"status": True}
+
 
     @classmethod
     def signin(cls, match_id, code):

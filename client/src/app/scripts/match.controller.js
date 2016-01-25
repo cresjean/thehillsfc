@@ -52,20 +52,32 @@ app
 
     });
 
-        $scope.manualCheckin = function(playerId){
-            $log.debug("manual check in " + playerId);
-            MatchFactory.manualCheckin(playerId, $scope.match.id).then(function(){
-              angular.forEach($scope.players, function(player){
-                if(player.id == playerId)
-                {
-                  player.signinOntime = true;
-                  player.signinTime =  new Date();
-                }
-              });
+    $scope.manualCheckin = function(playerId){
+        $log.debug("manual check in " + playerId);
+        MatchFactory.manualCheckin(playerId, $scope.match.id).then(function(){
+          angular.forEach($scope.players, function(player){
+            if(player.id == playerId)
+            {
+              player.signinOntime = true;
+              player.signinTime =  new Date();
             }
-            );
-
+          });
         }
+        );
+
+    };
+
+
+    $scope.manualFine = function(player, dollar){
+      var playerId = player.id;
+
+      $log.debug("manual fine " + playerId);
+      MatchFactory.manualFine(playerId, $scope.match.id, dollar).then(function(){
+          player.finePaid = dollar;
+
+      });
+
+    }
 
     $scope.cancelMatch = function(){
         MatchFactory.cancelMatch($scope.match.id).then(function(){
@@ -73,7 +85,14 @@ app
 
         });
     };
-        $scope.openMatch = function(){
+
+      $scope.submitComment = function(){
+        MatchFactory.submitComment($scope.match.id, $scope.match.comment).then(function(){
+
+        });
+      }
+
+      $scope.openMatch = function(){
         MatchFactory.openMatch($scope.match.id).then(function(){
             $state.go('home');
 
@@ -146,6 +165,14 @@ app
             },
             manualCheckin: function(people_id, match_id) {
                 return $http.post('/api/matches/'+match_id+'/manualsignin/'+people_id);
+            },
+            manualFine: function(people_id, match_id, dollar) {
+                return $http.post('/api/matches/'+match_id+'/manualfine/'+people_id, {dollar: dollar});
+            },
+            submitComment: function(match_id, comment) {
+                return $http.post('/api/matches/'+match_id+'/comment', {comment: comment});
+
+
             }
       }
     })

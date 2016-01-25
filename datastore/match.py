@@ -16,6 +16,7 @@ class Match(ndb.Model):
     registerdPeople = ndb.KeyProperty(kind=People, repeated=True)
     participatedPeople = ndb.KeyProperty(kind=People, repeated=True)
     status = ndb.StringProperty()
+    comment = ndb.StringProperty()
 
     @classmethod
     def create(cls, start, finish, signinEarliest, checkInLatest, location):
