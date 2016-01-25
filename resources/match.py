@@ -55,6 +55,12 @@ leave_parser.add_argument("status", type=bool, location='json', required=True,
                     help="Leave status must be set")
 
 
+class MatchManualSignin(Resource):
+
+    def post(self, match_id, people_id):
+        return MatchHelper.manualSignin(match_id, people_id)
+
+
 class MatchLeave(Resource):
 
    def post(self, match_id):
@@ -129,7 +135,7 @@ class MatchPlayers(Resource):
                     "team": play.team or None,
                     "leave": play.leave,
                     "signupMissing": play.signupMissing,
-                    "signinOntime": True if play.signinTime and play.signinTime < match.signinLatest else False,
+                    "signinOntime": True if play.signinTime and play.signinTime <= match.signinLatest else False,
                     "signinLate": True if play.signinTime and play.signinTime > match.signinLatest else False
                 })
             memcache.set(match_id, registered_people, namespace="match_players")
@@ -207,6 +213,18 @@ class MatchesResource(Resource):
 
 
 class MatchHelper():
+
+
+    @classmethod
+    def manualSignin(cls, match_id, people_id):
+        match = Match.getone(match_id)
+        match.signin(people_id)
+
+        play = Play.getbyMatchPeople(match_id, people_id)
+        play.signinTime = match.signinLatest
+        play.put()
+        memcache.flush_all()
+        return {"status": True}
 
     @classmethod
     def signin(cls, match_id, code):

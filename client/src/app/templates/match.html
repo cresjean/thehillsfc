@@ -69,6 +69,7 @@
                             <th>
                                 签到
                             </th>
+                            <th ng-if="storage.currentUser.admin">手动签到</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -92,8 +93,9 @@
                                 <span class="label label-warning" aria-hidden="true" ng-if="player.signinLate && !player.signupMissing">迟到</span>
                                 <span class="label label-default" aria-hidden="true" ng-if="player.signupMissing">访客</span>
                             </td>
+                            <td ng-if="storage.currentUser.admin"><button type="button" class="btn btn-primary btn-xs" ng-click="manualCheckin(player.id)">签到</button></td>
                         </tr>
-                        <tr ng-if="!players.length"><td colspan="2">还没有人报名哦</td></tr>
+                        <tr ng-if="!players.length"><td colspan="3">还没有人报名哦</td></tr>
                         </tbody>
 
                     </table>

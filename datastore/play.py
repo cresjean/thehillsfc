@@ -46,13 +46,14 @@ class Play(ndb.Model):
 
     def isOntime(self):
         match = self.match.get()
-        return True if self.signinTime and self.signinTime < match.signinLatest else False
+
+        return True if self.signinTime and self.signinTime <= match.signinLatest else False
 
     def isLate(self):
         match = self.match.get()
         if self.signinTime and self.signinTime > match.signinLatest:
             return True
-        import logging
+
         if self.signinTime is None and datetime.now() > match.signinLatest:
             return True
 

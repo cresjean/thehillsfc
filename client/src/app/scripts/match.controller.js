@@ -52,6 +52,21 @@ app
 
     });
 
+        $scope.manualCheckin = function(playerId){
+            $log.debug("manual check in " + playerId);
+            MatchFactory.manualCheckin(playerId, $scope.match.id).then(function(){
+              angular.forEach($scope.players, function(player){
+                if(player.id == playerId)
+                {
+                  player.signinOntime = true;
+                  player.signinTime =  new Date();
+                }
+              });
+            }
+            );
+
+        }
+
     $scope.cancelMatch = function(){
         MatchFactory.cancelMatch($scope.match.id).then(function(){
             $state.go('home');
@@ -128,6 +143,9 @@ app
             },
             openMatch: function(match_id) {
                 return $http.post('/api/matches/'+match_id+'/status/open');
+            },
+            manualCheckin: function(people_id, match_id) {
+                return $http.post('/api/matches/'+match_id+'/manualsignin/'+people_id);
             }
       }
     })

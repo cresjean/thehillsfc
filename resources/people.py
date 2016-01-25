@@ -44,11 +44,13 @@ class MeStat(Resource):
         for play in plays:
             match = play.match.get()
             if match.status is not None and match.status == 'OPEN':
+                logging.debug("play")
                 if play.leave:
                     leaves = leaves + 1
                 else:
                     signups = signups + 1
                 if play.isOntime():
+
                     ontime = ontime + 1
                 if not play.leave and play.isLate():
                     late = late + 1
