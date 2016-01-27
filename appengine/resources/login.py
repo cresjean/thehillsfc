@@ -2,6 +2,7 @@ __author__ = 'crespowang'
 
 from flask.ext.login import LoginManager, UserMixin, current_user, login_user, logout_user
 import logging
+
 from datastore.people import People
 
 login_manager = LoginManager()
@@ -17,6 +18,7 @@ class User(UserMixin):
         people = People.getbyusername(username)
         if not people:
             raise UserNotFoundError
+
         self.username = username
         self.name = people.name
         self.id = people.username

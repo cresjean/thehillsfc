@@ -7,7 +7,6 @@ app.controller('HomeCtrl', function ($scope, $log, $filter, MatchFactory,MeFacto
 
     $log.debug('Home Ctrl');
     $scope.match = {};
-    $log.debug('Welcome ' + $scope.storage.currentUser.name);
 
     MeFactory.getStat().success(function(data){
         $scope.stat = data;

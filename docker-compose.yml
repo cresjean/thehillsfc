@@ -1,0 +1,8 @@
+xgoteam:
+  build: .
+  ports:
+      - "80:80"
+      - "8000:8000"
+  volumes:
+      - ./appengine:/var/www
+      - ./run.sh:/root/run.sh

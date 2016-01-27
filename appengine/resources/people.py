@@ -40,6 +40,7 @@ class MeStat(Resource):
         signups = 0
         ontime = 0
         late = 0
+        finePaid = 0
         vistors = 0
         for play in plays:
             match = play.match.get()
@@ -50,14 +51,14 @@ class MeStat(Resource):
                 else:
                     signups = signups + 1
                 if play.isOntime():
-
                     ontime = ontime + 1
                 if not play.leave and play.isLate():
                     late = late + 1
                 if play.signupMissing:
                     vistors = vistors + 1
+                finePaid += play.finePaid
 
-        return {"leave": leaves, "signup": signups, "ontime":ontime, "late": late, "vistor": vistors}
+        return {"leave": leaves, "signup": signups, "ontime":ontime, "late": late, "vistor": vistors, "finePaid" : finePaid}
 
 
 class MeResource(Resource):
