@@ -3,16 +3,11 @@
  */
 'use strict';
 
-app.controller('HomeCtrl', function ($scope, $log, $filter, MatchFactory,MeFactory) {
+app.controller('HomeCtrl', function ($scope, $log, $filter, $q, MatchFactory, MeStat) {
 
     $log.debug('Home Ctrl');
     $scope.match = {};
-
-    MeFactory.getStat().success(function(data){
-        $scope.stat = data;
-    });
-
-
+    $scope.stat = MeStat.data;
     MatchFactory.getAllMatches().success(function(data){
             $log.debug("Fetching all matches");
             $scope.matches =  data['matches'];

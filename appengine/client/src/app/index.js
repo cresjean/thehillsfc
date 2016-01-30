@@ -15,8 +15,9 @@ var app = angular.module('hillfc',
         'ui.select'
     ]);
 
-app.config(function($stateProvider, $urlRouterProvider){
+app.config(function($stateProvider, $urlRouterProvider, $httpProvider){
     $urlRouterProvider.otherwise("/home");
+
     $stateProvider
         .state('match-signup', {
             url: '^/match-signup/:matchId/:matchCode',
@@ -124,6 +125,12 @@ app.config(function($stateProvider, $urlRouterProvider){
             controller: 'HomeCtrl',
             data: {
                 requireLogin: true
+            },
+            resolve: {
+              MeStat : function(MeFactory) {
+                    return MeFactory.getStat();
+
+              }
             }
             //resolve: {
             //        LoginFact: 'LoginFactory',
@@ -165,8 +172,27 @@ app.config(function($stateProvider, $urlRouterProvider){
                 }
             }
 
-        })
-
+        });
+  //
+  //$httpProvider.interceptors.push(function($q, $injector) {
+  //        return {
+  //
+  //            'responseError': function(rejection){
+  //
+  //                var defer = $q.defer();
+  //
+  //                if(rejection.status == 401){
+  //                  $injector.get('$state').transitionTo('login');
+  //                }
+  //
+  //                defer.reject(rejection);
+  //
+  //                return defer.promise;
+  //
+  //            }
+  //        };
+  //    });
+  //
 
 })
 
@@ -176,10 +202,12 @@ app.config(function($stateProvider, $urlRouterProvider){
     })
     .run(function(amMoment, $rootScope, $state, $log, $localStorage) {
         $rootScope.storage = $localStorage;
+
+
         $rootScope.$on('$stateChangeStart', function (event, toState, toParams) {
             var requireLogin = toState.data.requireLogin;
             var requireAdmin = toState.data.requireAdmin;
-
+            $log.debug("State Change Start");
             if (requireLogin && typeof $rootScope.storage.currentUser === 'undefined') {
                 event.preventDefault();
                 $state.go('login');
@@ -191,6 +219,15 @@ app.config(function($stateProvider, $urlRouterProvider){
             }
 
         });
+        $rootScope.$on('$stateChangeError', function(event, toState, toParams, fromState, fromParams, error){
+            $log.debug("State Change Error");
+
+        if(error.status == 401){
+          $log.debug("401 detected. Redirecting...");
+            $rootScope.storage.currentUser = undefined;
+            $state.go("login");
+        }
+    });
 
         amMoment.changeLocale('au');
     })
