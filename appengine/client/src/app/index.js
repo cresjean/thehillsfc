@@ -12,7 +12,8 @@ var app = angular.module('hillfc',
         'angularMoment',
         'monospaced.qrcode',
         'frapontillo.bootstrap-switch',
-        'ui.select'
+        'ui.select',
+      'gridshore.c3js.chart'
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider){
@@ -118,6 +119,14 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider){
             data: {
                 requireLogin: false
             }
+        })
+        .state('billboard', {
+          url: '^/billboard',
+          templateUrl: 'app/templates/billboard.html',
+          controller: 'BillboardCtrl',
+          data: {
+            requireLogin: true
+          }
         })
         .state('home', {
             url: '^/home',

@@ -1,0 +1,23 @@
+<div ng-include="'app/components/navbar/navbar.html'"></div>
+
+<div class="home-container">
+  <div class="row">
+    <div class="col-xs-12">
+      <h2>总出勤统计</h2>
+    <c3chart bindto-id="chart1">
+      <chart-column column-id="data-1"
+                      column-name="报名"
+                      column-values="30,200,100,400,150,250"
+                      column-type="line"/>
+      <chart-column column-id="data-2"
+                      column-name="请假"
+                      column-values="8,100,70,170,50,110"
+                      column-type="line"/>
+      <chart-column column-id="data-2"
+                      column-name="准时"
+                      column-values="8,100,70,170,50,110"
+                      column-type="line"/>
+    </c3chart>
+      </div>
+  </div>
+</div>

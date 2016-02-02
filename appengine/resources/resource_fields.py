@@ -73,6 +73,17 @@ matches_resource_fields = {
     'matches': fields.Nested(match_field)
 }
 
+match_stat_field = {
+    "id": fields.String,
+    "start": UTCTime,
+    "leave": fields.Integer,
+    "ontime": fields.Integer,
+    "signup": fields.Integer
+}
+matches_stat_fields = {
+    'matches': fields.Nested(match_stat_field)
+}
+
 
 play_field = {
     "id": fields.String,

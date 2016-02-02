@@ -66,6 +66,31 @@ comment_parser.add_argument("comment", type=str, location='json', required=True,
 
 
 
+class MatchesStat(Resource):
+    @marshal_with(matches_stat_fields)
+    def get(self):
+        matches = Match.getall()
+        matches_json = []
+        for match in matches:
+            plays = Play.getbyMatch(match.key.id())
+            leaves = 0
+            ontimes = 0
+            for play in plays:
+
+                if play.leave:
+                    leaves += 1
+                if play.signinTime and play.signinTime <= match.signinLatest:
+                    ontimes += 1
+
+            matches_json.append({
+                "id": match.key.id(),
+                "start": match.startTime,
+                "leave": leaves,
+                "ontime": ontimes,
+                "signup": len(match.registerdPeople)
+            })
+        return {"matches": matches_json}
+
 class MatchManualFine(Resource):
     def post(self, match_id, people_id):
         args = fine_parser.parse_args()

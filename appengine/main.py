@@ -1,7 +1,9 @@
 import logging
 from flask import Flask
 from flask import redirect, request
-from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, MatchPlayerIn, MatchSignUp, MatchLeave, MatchStatus,MatchManualSignin, MatchManualFine ,MatchComment
+from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, \
+    MatchPlayerIn, MatchSignUp, MatchLeave, MatchStatus,MatchManualSignin, MatchManualFine, \
+    MatchComment, MatchesStat
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource,MeStat
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
@@ -45,6 +47,8 @@ api.add_resource(MatchLeave, '/api/matches/<match_id>/leave')
 api.add_resource(MatchComment, '/api/matches/<match_id>/comment')
 api.add_resource(MatchManualSignin, '/api/matches/<match_id>/manualsignin/<people_id>')
 api.add_resource(MatchManualFine, '/api/matches/<match_id>/manualfine/<people_id>')
+api.add_resource(MatchesStat, '/api/matches/stat')
+
 
 api.add_resource(MatchResource, '/api/matches/<match_id>')
 api.add_resource(PeoplesResource, '/api/people')
@@ -62,6 +66,9 @@ api.add_resource(PeopleLoginResource, '/api/people/login')
 api.add_resource(PeopleLogoutResource, '/api/people/logout')
 api.add_resource(PeopleSignUpResource, '/api/people/signup')
 api.add_resource(PeoplePasswordResource, '/api/people/password-reset')
+
+
+
 
 @login_manager.unauthorized_handler
 def unauthorized():
