@@ -10,6 +10,7 @@ from flask_restful import Api
 from flask.ext.login import login_required, logout_user
 from appengine_config import host_url
 from resources.login import login_manager
+import webapp2
 app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SECRET_KEY'] = "asdbiu324yuihuebwfksdf9bkj234!@#$@"
@@ -67,7 +68,9 @@ api.add_resource(PeopleLogoutResource, '/api/people/logout')
 api.add_resource(PeopleSignUpResource, '/api/people/signup')
 api.add_resource(PeoplePasswordResource, '/api/people/password-reset')
 
-
+@app.route('/.well-known/acme-challenge/<code>')
+def xxxx(code):
+    return '{}.thcMl-VXF71YS4cMbXPT8G5FdzQdxUOiUumUcivfFbU'.format(code)
 
 
 @login_manager.unauthorized_handler
@@ -125,5 +128,3 @@ def match_signup(matchid, code):
 def page_not_found(e):
     """Return a custom 404 error."""
     return 'Sorry, nothing at this URL.', 404
-
-
