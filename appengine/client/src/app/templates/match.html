@@ -1,7 +1,7 @@
 <div ng-include="'app/components/navbar/navbar.html'"></div>
 
 <div class="home-container">
-    <div class="row ">
+    <div class="row match">
         <div class="col-md-10 highlight">
             <form class="form-horizontal">
                 <div class="form-group">
@@ -56,7 +56,7 @@
             </form>
         </div>
     </div>
-    <div class="row">
+    <div class="row match">
             <div class="col-md-6 col-md-offset-2 highlight">
                     <div class="table-responsive">
                     <table class="table table-striped">
@@ -64,26 +64,30 @@
                         <tr>
                             <th>#</th>
                             <th>分队</th>
+                            <th ng-if="storage.currentUser.admin">手动签到</th>
+                            <th ng-if="storage.currentUser.admin">手动罚款</th>
                             <th>报名</th>
                             <th>签到</th>
                             <th>已交罚款</th>
-
-                            <th ng-if="storage.currentUser.admin">手动签到</th>
-                            <th ng-if="storage.currentUser.admin">手动罚款</th>
 
                         </tr>
                         </thead>
                         <tbody>
                         <tr dir-paginate="player in players | itemsPerPage: 30 ">
                             <td>{{$index + 1}}</td>
+
+
                             <td><input bs-switch ng-model="teams[player.playId]" type="checkbox"
                                        data-player-id="player.id"
                                        switch-size="mini" switch-label-width="0"
-                                       ng-true-value="'red'" ng-false-value="'blue'"
+                                       ng-true-value="'red'" ng-false-value="'white'"
                                        switch-active="{{storage.currentUser.admin}}"
                                        switch-label-width="0"
-                                       switch-on-text="Red" switch-on-color="danger"
-                                       switch-off-color="primary" switch-off-text="Blue"></td>
+                                       switch-on-text="red" switch-on-color="danger"
+                                       switch-off-color="primary" switch-off-text="white"></td>
+
+                           <td ng-if="storage.currentUser.admin"><button type="button" class="btn btn-primary btn-xs" ng-click="manualCheckin(player.id)">签到</button></td>
+                           <td ng-if="storage.currentUser.admin"><button type="button" class="btn btn-info btn-xs" ng-click="manualFine(player, 1)">$1</button><button type="button" class="btn btn-info btn-xs" ng-click="manualFine(player, 2)">$2</button></td>
                             <td>
                                 <span ng-if="player.id == storage.currentUser.id" class="glyphicon glyphicon-user" aria-hidden="true"></span>{{player.name}}<span class="label label-info" aria-hidden="true" ng-if="player.admin">C</span> <span class="label label-default" aria-hidden="true" ng-if="player.leave">请假</span>
                             </td>
@@ -95,8 +99,7 @@
                                 <span class="label label-default" aria-hidden="true" ng-if="player.signupMissing">访客</span>
                             </td>
                             <td> <span class="label label-success" aria-hidden="true">${{player.finePaid}}</span></td>
-                            <td ng-if="storage.currentUser.admin"><button type="button" class="btn btn-primary btn-xs" ng-click="manualCheckin(player.id)">签到</button></td>
-                            <td ng-if="storage.currentUser.admin"><button type="button" class="btn btn-info btn-xs" ng-click="manualFine(player, 1)">$1</button><button type="button" class="btn btn-info btn-xs" ng-click="manualFine(player, 2)">$2</button></td>
+
 
                         </tr>
                         <tr ng-if="!players.length"><td colspan="3">还没有人报名哦</td></tr>

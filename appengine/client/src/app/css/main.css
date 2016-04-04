@@ -6,6 +6,10 @@
 	padding-top: 70px;
 }
 
+.match {
+  padding-left: 1em;
+}
+
 footer {
     margin: 50px 0;
 }
@@ -183,4 +187,3 @@ footer {
 	font-size: 22px;
 	background-color: transparent;
 }
-
