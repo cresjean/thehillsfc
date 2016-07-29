@@ -161,8 +161,22 @@ app
 
 
   })
-  .controller('SignUpMatchCtrl', function($scope, $log, MatchFactory, match) {
+  .controller('SignUpMatchCtrl', function($scope, $log, $state, MatchFactory, match, $timeout) {
     $scope.match = match.data.match;
+    $scope.countdown = 5;
+    var countdown = function(){
+      $timeout(function(){
+          if ($scope.countdown > 0) {
+            $scope.countdown = $scope.countdown - 1;
+            countdown();
+          }
+          else {
+                $state.go('match', {matchId: match.data.match.id});
+          }
+
+      },1000);
+    };
+    countdown();
 
   })
   .factory('MatchFactory', function($http) {
