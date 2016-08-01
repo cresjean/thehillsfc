@@ -1,5 +1,5 @@
 application: thehillsfc
-version: 2-3
+version: 2-4
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -55,6 +55,10 @@ handlers:
   static_files: static/\1
   upload: static/(.*\.ttf)
   login: required
+  
+- url: /api/matches/autocreate
+  script: main.app
+  login: admin
 
 skip_files:
 - ^(.*/node_modules/.*)

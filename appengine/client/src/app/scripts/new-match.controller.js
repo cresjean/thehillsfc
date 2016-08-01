@@ -29,16 +29,12 @@ app.controller('NewMatchCtrl', function ($scope, $log,$filter, $state, MatchFact
         lcheckinTimeInput.setTime(lcheckinTimeInput.getTime() - 60 * 1000 * 5);
         $scope.match.signinLatest  = lcheckinTimeInput;
 
-
     };
 
     $scope.createMatch = function(){
         $log.debug("creating the match");
         MatchFactory.createMatch($scope.match).success(function(data){
             $state.go('match', {matchId: data.match.id});
-
         });
     };
-
   });
-

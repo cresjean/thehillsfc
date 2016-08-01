@@ -1,6 +1,6 @@
 __author__ = 'crespowang'
 
-from flask_restful import reqparse, marshal_with, fields
+from flask_restful import reqparse, marshal_with, fields,  Resource as Flask_Resource
 import logging
 from google.appengine.api import memcache
 from datetime import datetime
@@ -196,6 +196,22 @@ class MatchPlayers(Resource):
 
         return {"people": registered_people}
 
+
+class MatchesResourceCron(Flask_Resource):
+    def get(self):
+        import datetime as levelone_datetime
+        import calendar
+        days_till_sunday = 6 - datetime.utcnow().weekday()
+        this_sunday = datetime.utcnow() + levelone_datetime.timedelta(days=days_till_sunday)
+        this_sunday_start = this_sunday.replace(hour=5, minute=00, second=00)
+        logging.debug("creating match from cron {}".format(this_sunday_start))
+
+        match = Match.create(this_sunday_start, this_sunday_start + levelone_datetime.timedelta(hours=2), this_sunday_start - levelone_datetime.timedelta(minutes=30),
+                             this_sunday_start - levelone_datetime.timedelta(minutes=5), "Kellyville Plaza")
+
+        match_id = match.id()
+        memcache.flush_all()
+        return {'match_id': match_id}
 
 class MatchResource(Resource):
 

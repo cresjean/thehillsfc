@@ -3,7 +3,7 @@ from flask import Flask
 from flask import redirect, request
 from resources.match import MatchesResource, MatchResource, MatchPlayers, MatchHelper, \
     MatchPlayerIn, MatchSignUp, MatchLeave, MatchStatus,MatchManualSignin, MatchManualFine, \
-    MatchComment, MatchesStat
+    MatchComment, MatchesStat, MatchesResourceCron
 from resources.people import PeopleResource, PeoplesResource, PeopleLoginResource, PeopleLogoutResource, PeopleSignUpResource,PeoplePasswordResource, MeResource,MeStat
 from resources.play import PlayResource, PlayMatchResource, PlayTeamResource
 from flask_restful import Api
@@ -41,6 +41,7 @@ custom_errors = {
 }
 
 api = Api(app, errors=custom_errors)
+
 api.add_resource(MatchesResource, '/api/matches')
 api.add_resource(MatchSignUp, '/api/matches/<match_id>/signmeup')
 api.add_resource(MatchStatus, '/api/matches/<match_id>/status/<status>')
@@ -49,7 +50,7 @@ api.add_resource(MatchComment, '/api/matches/<match_id>/comment')
 api.add_resource(MatchManualSignin, '/api/matches/<match_id>/manualsignin/<people_id>')
 api.add_resource(MatchManualFine, '/api/matches/<match_id>/manualfine/<people_id>')
 api.add_resource(MatchesStat, '/api/matches/stat')
-
+api.add_resource(MatchesResourceCron, '/api/matches/autocreate')
 
 api.add_resource(MatchResource, '/api/matches/<match_id>')
 api.add_resource(PeoplesResource, '/api/people')
