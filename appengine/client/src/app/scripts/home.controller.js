@@ -8,13 +8,12 @@ app.controller('HomeCtrl', function ($scope, $log, $filter, $q, MatchFactory, Me
     $log.debug('Home Ctrl');
     $scope.match = {};
     $scope.stat = MeStat.data;
+    $scope.now = new Date();
     MatchFactory.getAllMatches().success(function(data){
             $log.debug("Fetching all matches");
             $scope.matches =  data['matches'];
         }
     );
-
-
   })
 
 .factory('MeFactory', function ($http){
@@ -25,4 +24,3 @@ app.controller('HomeCtrl', function ($scope, $log, $filter, $q, MatchFactory, Me
       }
     })
 ;
-

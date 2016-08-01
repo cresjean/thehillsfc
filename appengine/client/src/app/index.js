@@ -13,7 +13,8 @@ var app = angular.module('hillfc',
         'monospaced.qrcode',
         'frapontillo.bootstrap-switch',
         'ui.select',
-      'gridshore.c3js.chart'
+      'gridshore.c3js.chart',
+      'angular-dazhaohu'
     ]);
 
 app.config(function($stateProvider, $urlRouterProvider, $httpProvider){
@@ -241,4 +242,3 @@ app.config(function($stateProvider, $urlRouterProvider, $httpProvider){
         amMoment.changeLocale('au');
     })
 ;
-

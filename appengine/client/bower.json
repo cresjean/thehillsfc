@@ -15,7 +15,8 @@
     "bootstrap": "3.3.5",
     "ngstorage": "~0.3.9",
     "ui-select": "angular-ui-select#~0.13.2",
-    "c3-angular": "^1.0.1"
+    "c3-angular": "^1.0.1",
+    "angular-dazhaohu": "*"
   },
   "devDependencies": {
     "angular-mocks": "~1.4.0"
