@@ -1,4 +1,4 @@
 cron:
 - description: "create a match in the weekend"
   url: /api/matches/autocreate
-  schedule: every friday 7:00
+  schedule: every wednesday 20:00
