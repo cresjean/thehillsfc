@@ -207,7 +207,7 @@ class MatchesResourceCron(Flask_Resource):
         logging.debug("creating match from cron {}".format(this_sunday_start))
 
         match = Match.create(this_sunday_start, this_sunday_start + levelone_datetime.timedelta(hours=2), this_sunday_start - levelone_datetime.timedelta(minutes=30),
-                             this_sunday_start - levelone_datetime.timedelta(minutes=5), "Kellyville Plaza")
+                             this_sunday_start - levelone_datetime.timedelta(minutes=5), "Ted Howard Reserve - 11 Renown Rd, Baulkham Hills")
 
         match_id = match.id()
         memcache.flush_all()
